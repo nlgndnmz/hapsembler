@@ -1,0 +1,65 @@
+-------------  Hapsembler-2.0 INSTALLATION GUIDE --------------------------
+
+Last update: September 17, 2012
+
+-- TO INSTALL --
+
+    Extract the tarfile by typing:
+
+"tar -xvzf hapsembler-2.0.tar.gz"
+
+    After extracting the tarfile into the desired installation directory,
+change to the "hapsembler-2.0" directory. Once in this directory, type:
+
+"make"
+
+    This command will create the binaries and place them under
+"hapsembler-2.0/bin/". To make the scripts and executables accessible from
+different directories, simply add the full path of this directory to your
+system PATH.
+
+    If your compiler does not support OpenMP, use the following command instead
+to disable multithreading:
+
+"make NO_OMP=1"
+
+    You can get the list compilers supporting OpenMP at http://openmp.org/wp/.
+You can control the number of threads used by Hapsembler at runtime so there is
+no downside to compiling Hapsembler with OpenMP support.
+
+    If installation is succesfull you should see the following binaries
+under "hapsembler-2.0/bin":
+
+    preprocr
+    encore
+    overlappr
+    hapsemblr
+    consensr
+    scarpa
+
+    In addition to these binaries, you should also find a shell script named
+"hapsemble" and two perl scripts named "scarpa_parser" and "scarpa_process"
+under "hapsembler-2.0/bin".
+
+-- SYSTEM REQUIREMENTS --
+
+    Hapsembler package requires the following to install and run successfully.
+Listed in parenthesis are the versions used to test the current Hapsembler
+package. These utilities must be accessible via the system path:
+
+   - make (GNU make 3.81)
+   - g++  (GNU gcc 4.3.2)
+   - bash (GNU bash 3.2.25)
+   - perl (v5.8.8)
+
+    Make sure you have sufficient memory and disk space avaliable to Hapsembler
+before running. A minimum of 16GB memory is recommended. Typically, Hapsembler
+will require around 3-4 times the memory that is required to store the reads.
+Keep in mind that actual requirements will vary with sequence coverage depth
+and repeat structure of the genome.
+
+    For information on how to use Hapsembler, please see the README file or
+view the documentation (in pdf format) under "hapsembler-2.0/doc".
+
+Please send your questions and bug reports to: <hapsembler@cs.toronto.edu>
+
