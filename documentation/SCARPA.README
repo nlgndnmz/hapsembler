@@ -1,6 +1,6 @@
 -------------  SCARPA-0.1 INSTALLATION GUIDE --------------------------
 
-Last update: September 21, 2012
+Last update: December 7, 2012
 
 -- TO INSTALL ---------------------------------------------------------
 
@@ -52,16 +52,18 @@ all questions and comments to nild@cs.toronto.edu.
     1) Preparing the reads and contigs:
     -----------------------------------
 
-    Use the perl script scarpa_process to get the reads and contigs ready by
-running the following command:
+    As a first step, the reads and contigs have to be prepared using the perl
+script "scarpa_process":
 
 scarpa_process -c <contigs> -f <reads> -i <insert size>
 
     Above:
 
     <contigs> -> is a fasta file containing the contigs.
-    <reads> -> is a fastq file containing each paired read in consecutive order.
-It should look like:
+    <reads> -> is a fastq file containing each READ PAIR IN CONSECUTIVE ORDER.
+    <insert size> -> is the insert size of the library in base pairs.
+
+The fastq file containing the reads should look like:
 
 @<defline for read 1f>
 <sequence for read 1f>
@@ -80,19 +82,27 @@ It should look like:
 +<defline for read 2r>
 <quality values for read 2r>
 
-    Note that the deflines following "+" are optional. The orientation of
+    Above, the deflines following "+" are optional. The orientation of
 the reads are expected to be forward-reverse.
 
-    <insert size> -> is the insert size of the library in base pairs.
+    If you have more than one library, you can use the -f and -i options
+repeatedly. For example, if you have two libraries in files lib1.fastq
+and lib2.fastq with insert sizes 300 and 600bp, respectively:
 
-    This script will produce the following files:
+scarpa_process -c contigs.fasta -f lib1.fastq -i 300 -f lib2.fastq -i 600
 
-<contigs>.scarpa.fa
-<reads>.scarpa.fq
-<contigs>.scarpa.info
+    This command will produce the following files:
 
-    You should map the file(s) "<reads>.scarpa.fq" to "<contigs>.scarpa.fa"
+contigs.fasta.scarpa.fa
+contigs.fasta.scarpa.info
+lib1.fastq.scarpa.fq
+lib2.fastq.scarpa.fq
+
+    You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa
 using a read mapper and get the results in a single SAM formatted file.
+The mapping should be performed in single-end mode. The *.scarpa.fq
+files are not needed after the SAM file is created, you may delete them
+subsequently to free disk space.
 
     ---------------------------
     2) Processing the mappings:
@@ -115,7 +125,7 @@ time and disk space for large datasets.
 
     In this last step, simply run the following command:
 
-scarpa -c <contigs>.scarpa.fa -l <map file> -i <contigs>.scarpa.info -o <output>
+scarpa -c <contigs>.scarpa.fa -i <map file> -l <contigs>.scarpa.info -o <output>
 
     Above "<contigs>.scarpa.fa", "<map file>", "<contigs>.scarpa.info" are the
 same files you have produced during the steps 1 and 2. <output> is the name for
@@ -125,7 +135,7 @@ the output file and it will contain the scaffolds in fasta format.
 several advanced options. You can get a description of these options by running
 scarpa with no arguments.
 
--- COPYRIGHT --
 
-    For licensing information see the file LICENSE.
+-- TESTING SCARPA -----------------------------------------------------
 
+    See the SAMPLE.README file under "scarpa-0.1/test".
