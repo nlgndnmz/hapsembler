@@ -1,0 +1,165 @@
+-------------  Encore-1.1 INSTALLATION GUIDE --------------------------
+
+Last update: September 17, 2012
+
+-- TO INSTALL --
+
+    Extract the tarfile by typing:
+
+tar -xvzf encore-1.1.tar.gz
+
+    After extracting the tarfile into the desired installation directory,
+change to the "encore-1.1" directory. Once in this directory, type:
+
+make
+
+    This command will create the binaries and place them under
+"encore-1.1/bin/". To make the executables accessible from different
+directories, simply add the full path of this directory to your system PATH.
+
+    If your compiler does not support OpenMP, use the following command instead
+to disable multithreading:
+
+make NO_OMP=1
+
+    You can get the list compilers supporting OpenMP at http://openmp.org/wp/.
+You can control the number of threads used by Encore at runtime so there is
+no downside to compiling Encore with OpenMP support.
+
+    If installation is succesfull you should see the following binaries
+under "encore-1.1/bin":
+
+    preprocr
+    encore
+
+-- SYSTEM REQUIREMENTS --
+
+    Encore package requires the following to install and run successfully.
+Listed in parenthesis are the versions used to test the current Encore
+package. These utilities must be accessible via the system path:
+
+    - make (GNU make 3.81)
+    - g++  (GNU gcc 4.4.6)
+
+    Make sure you have sufficient memory and disk space avaliable to Encore
+before running. A minimum of 16GB memory is recommended. Typically, Encore
+will require around 3-4 times the memory that is required to store the reads.
+Keep in mind that actual requirements will vary with sequence coverage depth.
+
+    Encore is mainly tested on 64-bit Linux environments. You may be able to run
+Encore on Windows platform using Cygwin, however, support in this case will be
+limited. MAC environments are not supported at the moment. Please send
+all questions and comments to nild@cs.toronto.edu.
+
+-- RUNNING ENCORE --
+
+    -----------------------
+    1) Preparing the reads:
+    -----------------------
+
+    If you have Roche/454 reads or long Illumina reads (i.e. >100bp), it is
+highly recommended that you quality trim the reads before correcting them
+with Encore. For your convenience, the Encore package includes a program named
+for "preprocr" this task:
+
+SYNOPSIS
+    preprocr -p <platform> -f <file> -o <file>
+
+OPTIONS
+    --platform|-p [illumina|fourfivefour]
+        Defines the type of the platform the reads are produced from (required)
+
+    --fastq|-f fastq_filename
+        Fastq formatted input file (required)
+
+    --output|-o output_filename
+        Output filename. Default is standard output.
+
+    --phred|-d N
+        Set the Phred offset for the quality values to N. Default value is 33
+        for fourfivefour and 64 for illumina.
+
+    --threshold|-s E
+        Set the threshold for trimming. E must be a real number between 0.0
+        (no trimming) and 0.5 (most trimming). Default values are 0.05 for
+        illumina and 0.1 for fourfivefour.
+
+
+    Please note that it is very important to set the correct Phred (ASCII)
+offset for your reads. See http://en.wikipedia.org/wiki/FASTQ_format for more
+information on the ASCII encoding of fastq files or contact your sequencing
+vendor.
+
+    Note that this program does not trim for vector or barcode sequences. If
+you suspect that your reads may contain these, you should vector/barcode trim
+them before using preprocr.
+
+
+    ------------------
+    2) Running encore:
+    ------------------
+
+    When your reads are ready, run "encore" to correct your reads:
+
+SYNOPSIS
+    encore -p <platform> -f <file> -o <file> -g <genome>
+
+OPTIONS
+    --platform|-p [illumina|fourfivefour]
+        Define the type of the platform the reads are produced from (required)
+
+    --fastq|-f fastq_filename
+        Fastq formatted input file (required)
+
+    --output|-o output_filename
+        Output filename for corrected reads (required)
+
+    --genome|-g V
+        Estimated genome size in kilo base pairs. (required)
+
+    --nthreads|-t K
+        Use K number of threads (ignored if program is compiled with NO_OMP=1)
+
+    --onestrand|-a [yes|no]
+        If set to yes, the reads are treated as single stranded. Default value
+        is no.
+
+    --epsilon|-e X (real number)
+        Set the expected discrepancy (mismatches+indels) rate. X must be a real
+        number between 0.01 and 0.09. Default values for illumina and
+        fourfivefour are 0.04 and 0.06 respectively.
+
+    --phred|-d N
+        Set the phred offset for the quality values to N. Default value is 33
+        for fourfivefour and 64 for illumina.
+
+
+    Above, the --onestrand option should only be used for single-strand
+sequencing experiments such as RNA-seq.
+
+
+-- MEMORY REQUIREMENTS --
+
+    The memory required by Encore can be estimated by the following formula:
+
+    2*M + 14*(M/k) + 10*(4^(k)) + n*(8*t + 25) + C
+
+    where:
+
+    M -> the total number of base pairs in the reads
+    k -> 14 if the genome size is less than 268mbp, and 15 if it is larger
+    t -> is the number of threads specified with --nthreads option
+    n -> the number of reads
+    C -> a small overhead (typically less than 1GB)
+
+
+-- LIMITATIONS --
+
+    Officially, we only support Roche/454 and Illumina platforms, however, if
+you have Sanger reads you may be able to correct them by specifiying the
+fourfivefour option. Color space reads (eg. ABI/SOLiD) or single-molecule
+sequencing reads (eg. PACBIO) are not supported.
+
+-- COPYRIGHT --
+
+    For licensing information see the file LICENSE.

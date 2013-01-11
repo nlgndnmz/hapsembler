@@ -1,0 +1,259 @@
+
+\documentclass[12pt,a4paper]{report}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{amssymb}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\title{Hapsembler (version 2.0) \\ ( + Encore \& Scarpa) \\ Manual }
+
+\author{Nilgun Donmez \\
+\emph{Department of Computer Science} \\
+\emph{University of Toronto} }
+
+\date{September 24, 2012}
+
+\renewcommand\bibname{References}
+
+\setcounter{tocdepth}{3}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\renewcommand*\thesection{\arabic{section}}
+
+\section{Introduction}
+
+We are happy to release the second major version of Hapsembler. Hapsembler Version 2.0 features automated setting of most parameters and added options such as estimation of library statistics. The new Hapsembler package also includes the scaffolding tool Scarpa, which can be used as a stand alone scaffolder. In addition, Scarpa and the read correction module Encore are now also released separately. See \url{http://compbio.cs.toronto.edu/hapsembler} for details. 
+
+\section{Installation}
+
+To install Hapsembler download the \texttt{hapsembler-2.0} package available at \\ \url{http://compbio.cs.toronto.edu/hapsembler} and run:
+
+\begin{verbatim}
+tar -xzvf hapsembler-2.0.tar.gz
+\end{verbatim}
+
+Once the files are extracted, change your directory to \texttt{hapsembler-2.0} and type:
+
+\begin{verbatim}
+make
+\end{verbatim}
+
+This will create the binaries and place them under \texttt{hapsembler-2.0/bin}. In order to access the individual programs from any location, you should add this directory to your system path. 
+
+Please note that Hapsembler is mainly tested in 64-bit Linux-based environments. You may install Hapsembler on a 32-bit environment however this is not recommended due to memory limitations. Please see the Frequently Asked Questions (section \ref{faq}) for platforms other than Linux.
+
+\section{Requirements}
+
+The Hapsembler package requires the following to install and run successfully. Listed in parenthesis are the versions used to test the current Hapsembler package. These utilities must be accessible via the system path:
+
+\begin{verbatim}
+    - make (GNU make 3.81)
+    - g++  (GNU gcc 4.4.6)
+    - bash (GNU bash 3.2.25)
+    - perl (v5.8.8)
+\end{verbatim}
+
+Additionally, you will need OpenMP to run Hapsembler in multi-threaded more. You can get the list of compilers supporting OpenMP at \url{http://openmp.org/wp/}. Note that you can control the number of threads used by Hapsembler at runtime so there is no downside to compiling Hapsembler with this option. If you are unable to obtain a compiler that supports OpenMP you can still compile the binaries for single-threaded use with the following directive:
+
+\begin{verbatim}
+make NO_OMP=1
+\end{verbatim}
+
+Note that Hapsembler comes bundled with the lp\_solve library (version 5.5.2) for 64-bit Linux. If you have a 32-bit system, you will have to download the appropriate files from \url{http://sourceforge.net/projects/lpsolve/} in order to compile the scaffolding module. Nonetheless, we strongly recommend that you compile and run all Hapsembler tools in a 64-bit architecture.
+
+Make sure you have sufficient memory and disk space available to Hapsembler before running. A minimum of 16GB memory is recommended. Typically, Hapsembler will require around 3-4 times the memory that is required to store the reads. Keep in mind that actual requirements will vary with sequence coverage depth and repeat structure of the genome.
+
+\section{Changes from the previous release}
+
+In addition to changes to the code base, Hapsembler 2.0 has a slightly different user interface. Some parameters are now automatically set for convenience and more robust results. The following is a list of the parameter/option changes from the previous release:
+
+\subsection{From Hapsembler-1.1:}
+
+\subsection{From Hapsembler-0.1:}
+
+\begin{itemize}
+\item An option called \texttt{onestrand} is added to \texttt{encore}, \texttt{overlappr} and \texttt{hapsemblr} for single-strand sequencing (eg. RNA-seq). See the related sections for further information. \\
+\item \texttt{--MAX\_READ\_SIZE} option is depreciated. This value is now determined from the input. \\
+\item \texttt{preprocr} no longer supports fasta formatted files. All input files must be in fastq format. However, now you can specify paired reads in two files and reverse complement them on the fly. See the corresponding section for details. \\
+\item \texttt{--platform} argument no longer takes \texttt{sanger} as an option. Sanger reads are no longer supported but if you still wish to use Hapsembler, you may be able to assemble them with the \texttt{fourfivefour} option.
+\end{itemize}
+
+Aside from the list above, the default values of some of the parameters also changed. Please run the tools with no argument or search the corresponding section below to see the new default values.
+
+\section{Data preperation}
+\label{data}
+
+Hapsembler requires all the reads - even if they are generated from different libraries - to be in a single fastq formatted file. If you have paired read libraries, you will also need to create a library info file where each line obeys the following format:
+
+\begin{verbatim}
+<start> <end> <mean insert size> <standard deviation> <orientation>
+\end{verbatim}
+
+For instance, the following library info file:
+
+\begin{verbatim}
+1 24000000 300 30
+24000001 34000000 700 70
+\end{verbatim}
+
+indicates that the data consists of 2 libraries (possibly followed by some single-end reads). The first library includes the first 24m reads in the fastq file and has a mean insert size and standard deviation of 500bp and 50bp respectively. The second library contains the next 10m reads and has a mean and standard deviation of 700bp and 70bp respectively. The rest of the reads (if any) are taken to be single reads. 
+
+Note that paired reads must come BEFORE any single reads in the input file and each pair must be consecutive in the file. The paired reads should be sampled from opposite strands and face towards each other:
+
+\begin{verbatim}
+Genome:
+
+5' -------------------------------------------------------------------> 3'
+3' <------------------------------------------------------------------- 5'
+
+       Read_A:  5' |----------> 3'
+                                         3' <----------| 5'  : Read_B
+\end{verbatim}
+
+If your reads are in an orientation different from above, you have to reverse complement them. For your convenience, the utility tool \texttt{preprocr} included in this package has an option to reverse complement either of the reads. See section \ref{utils} for further information.
+
+\section{Running Hapsembler}
+
+The Hapsembler pipeline is distributed among several executables under into 3 main stages: 1) error correction 2) genome assembly and 3) scaffolding. This section describes each stage in detail and how to use the individual tools. If you forget the options available to a Hapsembler program, simply run it with no arguments and a help message will be displayed. Note that the order of the options do not matter.
+
+\subsection{Error Correction}
+
+\subsubsection{preprocr}
+\label{utils}
+
+\texttt{preprocr} is a utility program that helps prepare your data for further steps in the assembly. We recommend using this tool if you have long ($>$150bp) Illumina reads or Roche/454 reads in order to quality trim the reads. If you have separate files for different libraries, you can run this tool separately on each file. If you have paired reads in two complementary files you can also merge them using \texttt{preprocr} (see options below). Note that \texttt{preprocr} does not trim for vector sequences. If your data contain any barcodes or vector sequences, please remove these before using \texttt{preprocr}.
+
+\subsubsection{encore}
+\label{ercor}
+
+Once you prepare your reads, you should run the error correction program \texttt{encore}. You can use this program even if you do not intend to perform \emph{de novo} assembly on your reads, for instance as preprocessing for SNP detection, reference-guided assembly, etc.
+
+\subsection{Genome Assembly}
+
+\subsubsection{overlappr}
+
+\texttt{overlappr} is a tool that computes the overlaps between the reads, which form the basis of the overlap
+graph. It takes the reads in fastq format and outputs two files containing the reads and overlaps. These two files are
+required by \texttt{hapsemblr} (discussed below).
+
+\subsubsection{hapsemblr}
+
+\texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly.
+It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required
+by \texttt{consensr}, which is then converted to a fasta file containing the contigs (see below).
+
+\subsubsection{consensr}
+\label{cons}
+
+\texttt{consensr} computes a consensus alignment for each contig produced by \texttt{hapsemblr} and writes the results into a single
+fasta formatted file. As input, it takes a fastq file containing the reads and a file containing the contigs as output by
+\texttt{hapsemblr}. Note that the fastq file given as input to \texttt{consensr} should be
+identical to the one given as input to \texttt{overlappr}.
+
+\subsubsection{hapsemble}
+\label{hapscript}
+
+\texttt{hapsemble} is a wrapper script that executes the programs in the Hapsembler pipeline in a logical order. Note that this script will not work unless the full path of the Hapsembler bin directory is added to your system path. The synopsis of the script and the basic options are described below.
+
+You can use the stage option to re-evaluate one or more stages due to previous failures or due to option changes. For instance, if you would like to re-run \texttt{hapsemblr} but this time allow 4 standard deviations when connecting mate pairs, you can change the corresponding option and set the stage-start to 4 and only the last two steps of the pipeline will be executed. Aside from the common options described above, this script can also take a number of advanced options to further control the assembly process. These options are described in the next section.
+
+\subsection{Scaffolding}
+
+\subsubsection{scarpa\_process}
+
+\subsubsection{scarpa\_parser}
+
+\subsubsection{scarpa}
+
+\section{Memory Usage}
+
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirements for \texttt{preprocr}, \texttt{correctr}, \texttt{overlappr} and \texttt{consensr} are:
+
+\begin{eqnarray}
+C \\
+2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
+M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
+2M + 37n + C
+\end{eqnarray}
+
+where $C$ is a small (usually less than 1GB) overhead. Note that, the above should still be taken
+as lower bounds: the actual memory used by these programs might vary slightly in different environments.
+
+The memory requirements of \texttt{hapsemblr} and \texttt{scarpa} are harder to estimate since they depend on factors that can not be immediately measured using the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
+
+\section{Frequently Asked Questions}
+\label{faq}
+
+\subsection{What is Hapsembler?}
+
+Hapsembler\cite{donmez2} is a \emph{de novo} genome assembler built for highly polymorphic organisms for use with capillary, Roche/454 and Illumina reads. For examples of highly polymorphic organisms see \cite{small2} or \cite{sodergren}.
+
+\subsection{What is polymorphism?}
+
+In genomics, polymorphism refers to any type of genetic variation that is present between the individuals of a species. Examples of genomic polymorphism include Single Nucleotide Polymorphisms (SNPs), Copy Number Variations (CNVs) and Structural Variations (SVs).
+
+\subsection{Why is assembling a highly polymorphic genome difficult?}
+
+For multiploid organisms, polymorphism is also present between the haplotypes of a single individual. On one hand, a high degree of polymorphism means that reads from different haplotypes can not be assembled together. On the other hand, since the level of polymorphism is also highly variable across the genome, some regions of the genome are inevitably homozygous and reads from these regions are difficult to separate. Such regions will be collapsed while others are separated, thus creating tangles in the assembly. Moreover, sequencing errors may be mistaken for SNPs and small indels further complicating the assembly.
+
+\subsection{Can Hapsembler assemble haploid genomes?}
+\label{haploid}
+
+Hapsembler can assemble genomes with low/no polymorphism (e.g. bacteria) however it is designed for highly polymorphic genomes and therefore may not be the best choice for all organisms. If you have a very large genome (e.g. >900mbp) with low polymorphism (e.g. mammalian) and high coverage of short reads, we suggest that you use assemblers optimized for such data (e.g. \cite{simpson}).
+
+\subsection{Can Hapsembler assemble human genomes?}
+
+See question \ref{haploid}.
+
+\subsection{Can Hapsembler be used for metagenomics?}
+
+Although metagenomics and polymorphic genome assembly share certain aspects, we believe they have distinct goals and call for different strategies. Hapsembler is not tested on any metagenomics data and some of the methods are not suitable for highly variable coverage. For such projects, we recommend tools tailored for metagenomics (e.g. \cite{laserson}).
+
+\subsection{Can I use color space reads with Hapsembler?}
+
+Unfortunately, color space reads (i.e. ABI/SOLiD platform) are not supported by Hapsembler.
+
+\subsection{Does Hapsembler perform scaffolding?}
+
+Yes! The Hapsembler package (version 2.0) includes a stand-alone scaffolding tool called Scarpa. You can use this tool to perform scaffolding using paired-end and/or mate-pair reads
+
+\subsection{Can I use Hapsembler just to do error correction?}
+
+Yes, see section \ref{ercor} for details. If you only intend to do error correction on your reads, you can also download the error correction module Encore from \url{http://compbio.cs.toronto.edu/hapsembler} instead of installing the entire Hapsembler package.
+
+\subsection{Can I run Hapsembler on platforms other than Linux?}
+
+It is possible to install and run Hapsembler on Windows XP/Vista via Cygwin or on MAC OSX if the appropriate compiler and utility packages are present. However, these environments will not be supported.
+
+\subsection{How do I cite Hapsembler?}
+
+Please cite Hapsembler and Encore as: \cite{donmez2}. The manuscript for Scarpa is currently under review.
+
+\subsection{I found a bug, what do I do?}
+
+Send any suggestions or bugs to: hapsembler@cs.toronto.edu. Please try to give as much detail as possible to trace the bug: the computing environment, sample data (if possible), parameters used, etc.
+
+\bibliography{HapsemblerDocumentation}
+\bibliographystyle{siam}
+
+\end{document}
+
+

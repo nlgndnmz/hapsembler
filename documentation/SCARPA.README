@@ -1,0 +1,131 @@
+-------------  SCARPA-0.1 INSTALLATION GUIDE --------------------------
+
+Last update: September 21, 2012
+
+-- TO INSTALL ---------------------------------------------------------
+
+    Extract the tarfile by typing:
+
+tar -xvzf scarpa-0.1.tar.gz
+
+    After extracting the tarfile into the desired installation directory,
+change to the "scarpa-0.1" directory. Once in this directory, type:
+
+make
+
+    This command will create the binary "scarpa" and place it under
+"scarpa-0.1/bin/". In addition, this directory should contain two perl scripts
+named "scarpa_process" and "scarpa_parser". If your copy of perl is installed in
+a non-standard location, change the first line of each script to the correct
+location. To make the executable and scripts accessible from different
+directories, simply add the full path of this directory to your system PATH.
+
+-- SYSTEM REQUIREMENTS ------------------------------------------------
+
+    SCARPA package requires the following to install and run successfully.
+Listed in parenthesis are the versions used to test the current SCARPA
+package. These utilities must be accessible via the system path:
+
+    - make (GNU make 3.81)
+    - g++  (GNU gcc 4.4.6)
+    - perl (v5.8.8)
+
+    In addition, you will need an efficient read mapping software such as
+Bowtie ( http://bowtie-bio.sourceforge.net/index.shtml ) or BWA
+( http://bio-bwa.sourceforge.net/ ). You may use any mapping software available
+for your sequencing platform provided that it can report its output in SAM
+format.
+
+    Note that SCARPA comes bundled with the lp_solve library (version 5.5.2)
+for 64-bit Linux. If you have a 32-bit system, you will have to download the
+appropriate file (i.e. lp_solve_5.5.2.0_dev_ux32.tar.gz) from
+http://sourceforge.net/projects/lpsolve/ in order to compile SCARPA. However,
+we strongly recommend running SCARPA on a 64-bit environment since large
+datasets may require over 4GB memory.
+
+    Windows and MAC environments are not supported at the moment. Please send
+all questions and comments to nild@cs.toronto.edu.
+
+-- RUNNING SCARPA -----------------------------------------------------
+
+    -----------------------------------
+    1) Preparing the reads and contigs:
+    -----------------------------------
+
+    Use the perl script scarpa_process to get the reads and contigs ready by
+running the following command:
+
+scarpa_process -c <contigs> -f <reads> -i <insert size>
+
+    Above:
+
+    <contigs> -> is a fasta file containing the contigs.
+    <reads> -> is a fastq file containing each paired read in consecutive order.
+It should look like:
+
+@<defline for read 1f>
+<sequence for read 1f>
++<defline for read 1f>
+<quality values for read 1f>
+@<defline for read 1r>
+<sequence for read 1r>
++<defline for read 1r>
+<quality values for read 1r>
+@<defline for read 2f>
+<sequence for read 2f>
++<defline for read 2f>
+<quality values for read 2f>
+@<defline for read 2r>
+<sequence for read 2r>
++<defline for read 2r>
+<quality values for read 2r>
+
+    Note that the deflines following "+" are optional. The orientation of
+the reads are expected to be forward-reverse.
+
+    <insert size> -> is the insert size of the library in base pairs.
+
+    This script will produce the following files:
+
+<contigs>.scarpa.fa
+<reads>.scarpa.fq
+<contigs>.scarpa.info
+
+    You should map the file(s) "<reads>.scarpa.fq" to "<contigs>.scarpa.fa"
+using a read mapper and get the results in a single SAM formatted file.
+
+    ---------------------------
+    2) Processing the mappings:
+    ---------------------------
+
+    Before running SCARPA, you need to process the mappings using the script
+scarpa_parser using the following command:
+
+cat <sam file> | scarpa_parser [-e <maximum # of mismatches>] > <map file>
+
+    The argument -e is optional and by default set to 0. <map file> will be
+needed in the next step. Note that this script takes the SAM file from standard
+input, so if you are using a mapper that writes the SAM file to standard output
+you can pipe its output directly to scarpa_parser. This can save significant
+time and disk space for large datasets.
+
+    ------------------
+    3) Running scarpa:
+    ------------------
+
+    In this last step, simply run the following command:
+
+scarpa -c <contigs>.scarpa.fa -l <map file> -i <contigs>.scarpa.info -o <output>
+
+    Above "<contigs>.scarpa.fa", "<map file>", "<contigs>.scarpa.info" are the
+same files you have produced during the steps 1 and 2. <output> is the name for
+the output file and it will contain the scaffolds in fasta format.
+
+    In addition to the mandatory arguments above, the scarpa executable takes
+several advanced options. You can get a description of these options by running
+scarpa with no arguments.
+
+-- COPYRIGHT --
+
+    For licensing information see the file LICENSE.
+

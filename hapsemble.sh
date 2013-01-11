@@ -1,0 +1,214 @@
+#!/bin/bash
+
+############################################################################
+#
+#     Part of Hapsembler package. See the README file for more information.
+#     Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#############################################################################
+
+print_help()
+{
+	echo " "
+	echo "Usage: $0 -p <platform> -f <input file> -g <genome size>
+	echo " "
+	echo "--platform|-p [illumina|fourfivefour]"
+	echo "    Defines the type of the platform the reads are produced from (required)"
+	echo " "
+	echo "--fastq|-f fastq_filename"
+	echo "    Fastq formatted input file (required)"
+	echo " "
+	echo "--genome|-g genome_size"
+	echo "    Estimated genome size in kbp. (required)"
+	echo " "
+	echo "--output|-o output_filename"
+	echo "    Output filename. Default is 'output.fasta'."
+	echo " "
+	echo "--library|-l library_filename"
+	echo "    File containing information about libraries. If unset, all reads are taken to be single production."
+	echo " "
+	echo "--nthreads|-t N (integer)"
+	echo "    Use N number of threads (ignored if program is not compiled with OMP_OK=1)"
+	echo " "
+	echo "--onestrand|-a [yes|no]"
+	echo "    If set to yes, the reads are treated as single stranded. Default is no."
+	echo " "
+    echo "--calibrate|-b [yes|no]"
+    echo "    If set to yes, re-calculates the mean and standard deviation of each library. The default is yes."
+	echo " "
+	echo "--epsilon|-e E (real number)"
+	echo "    Set the expected (mismatches+indels) rate. E must be a real number between 0.01 and 0.09. Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively."
+	echo " "
+	echo "--phred|-d N (integer)"
+	echo "    Set the phred offset for the quality values to N. Default values for illumina and fourfivefour are 64 and 33 respectively."
+	echo " "
+	echo "--min-size|-m N (integer)
+	echo "    Set the minimum size of a contig to be reported to N (in bp). Default value is 200."
+	echo " "
+	echo "--stage-start|-y [--stage-end|-z] N (integer)"
+	echo "    Set the starting/ending stage to N, where N is an integer between 1 and 3. Defaults are 1 and 3 respectively. Stages are as follows:"
+	echo "        1 -> overlappr"
+	echo "        2 -> hapsemblr"
+	echo "        3 -> consensr"
+	echo " "
+	echo "    See the README file for more information."
+	echo " "
+	exit
+}
+
+if [ $# -eq 0 ]
+then
+	print_help
+fi
+
+# default arguments
+DNAOPTS=" "
+HAPOPTS=" "
+PREF="output.fasta"
+NUMT=1
+PLTF="NOPLATFORM"
+FSTQ="input"
+STAGE=1
+STAGEND=3
+REVC=0
+GENOME=0
+
+# translate long options to short
+for arg
+do
+	delim=""
+	case "$arg" in
+		--fastq) args="${args}-f ";;
+		--output) args="${args}-o ";;
+		--platform) args="${args}-p ";;
+		--genome) args="${args}-g";;
+		--nthreads) args="${args}-t ";;
+		--library) args="${args}-l ";;
+		--onestrand) args="${args}-a ";;
+		--calibrate) args="${args}-b ";;
+		--epsilon) args="${args}-e ";;
+		--phred) args="${args}-d ";;
+		--min-size) args="${args}-m ";;
+		--stage-start) args="${args}-y ";;
+		--stage-end) args="${args}-z ";;
+		*) [[ "${arg:0:1}" == "-" ]] || delim="\""
+			args="${args}${delim}${arg}${delim} ";;
+	esac
+done
+# reset the translated args
+eval set -- $args
+
+while getopts 'f:o:p:g:t:l:a:b:e:d:m:y:z:' OPTION
+do
+	case $OPTION in
+		f) FSTQ="$OPTARG";;
+		o) PREF="$OPTARG";;
+		p) PLTF="$OPTARG";;
+		g) GENOME="$OPTARG";;
+		t) NUMT="$OPTARG";;
+		l) HAPOPTS=${HAPOPTS}"--library $OPTARG ";;
+		a) HAPOPTS=${HAPOPTS}"--onestrand $OPTARG "; DNAOPTS=${DNAOPTS}"--onestrand $OPTARG ";;
+		b) HAPOPTS=${HAPOPTS}"--calibrate $OPTARG ";;
+		e) DNAOPTS=${DNAOPTS}"--epsilon $OPTARG ";;
+		d) DNAOPTS=${DNAOPTS}"--phred $OPTARG ";;
+		m) DNAOPTS=${DNAOPTS}"--min-size $OPTARG ";;
+		y) STAGE="$OPTARG";;
+		z) STAGEND="$OPTARG";;
+		?) echo "Undefined option!"; print_help;;
+	esac
+done
+
+if [ ! -f $FSTQ ]
+then
+	echo " "
+	echo "Input file [$FSTQ] not found. Aborting!"
+	print_help
+fi
+
+if [ $PLTF = "NOPLATFORM" ]
+then
+	echo " "
+	echo "No platform is given. Aborting!"
+	print_help
+fi
+
+if [ $GENOME -lt 1 ]
+then
+	echo " "
+	echo "Genome size is too small or not given. Aborting!"
+	print_help
+fi
+
+if [ $STAGEND -lt $STAGE ]
+then
+	echo " "
+	echo "State start should be lower than or equal to stage end. Aborting!"
+	print_help
+fi
+
+OVL=$PREF".overlaps"
+RDS=$PREF".reads"
+CNT=$PREF".contigs"
+
+echo " "
+echo "$0 started: "
+date
+
+if [ $STAGE -lt 2 ]
+then
+	overlappr $DNAOPTS -p $PLTF -t $NUMT -f $FSTQ -o $PREF -g $GENOME
+	rm -f $PREF".ovltmp"??
+fi
+
+if [ $STAGEND -lt 2 ]
+then
+	exit
+fi
+
+if [ $STAGE -lt 3 ]
+then
+	if [ ! -f $RDS ]
+	then
+		echo "Input file [$RDS] not found. Aborting!"
+		exit
+	fi
+
+	if [ ! -f $OVL ]
+	then
+		echo "Input file [$OVL] not found. Aborting!"
+		exit
+	fi
+	hapsemblr $HAPOPTS -r $PREF -c $CNT -g $GENOME
+fi
+
+if [ $STAGEND -lt 3 ]
+then
+	exit
+fi
+
+if [ $STAGE -lt 4 ]
+then
+	if [ ! -f $CNT ]
+	then
+		echo "Input file [$CNT] not found. Aborting!"
+		exit
+	fi
+	consensr $DNAOPTS -p $PLTF -f $FSTQ -c $CNT -o $PREF
+fi
+
+echo "$0 finished. Contigs were written to $PREF"
+date
+

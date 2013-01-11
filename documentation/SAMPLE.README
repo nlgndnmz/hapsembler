@@ -1,0 +1,36 @@
+------------- Hapsembler-1.1 DEMO ---------------------
+
+Last update: November 27, 2011
+
+This directory should contain:
+
+    sample_illu.fastq -> A fastq formatted file containing simulated
+        paired-end Illumina reads. This dataset consists of a small
+        subset of the reads taken from Assemblathon1 (visit
+        http://assemblathon.org for more information).
+
+    sample_illu.info -> This is an example of library information file as
+        required by Hapsembler. The reads belong to a single library w/
+        insert size of 300bp and standard deviation of 30bp.
+
+    SAMPLE.README -> This file.
+
+
+How to run the demo:
+
+    1) First, install Hapsembler following the instructions given in
+    "hapsembler-1.1/INSTALL".
+
+    2) Add the full path of "hapsembler-1.1/bin" to your system path.
+
+    3) Change your directory to "hapsembler-1.1/samples" and type:
+
+    hapsemble -p illumina -g 40 -f sample_illu.fastq -l sample_illu.info
+
+    4) If the demo runs successfully, the file "output.fasta" should 
+    contain 44 contigs totalling around 0.54m base pairs.
+
+WARNING: You will need a machine with 7GB or more memory to run this demo.
+Typical running time of the demo is 8-10 minutes. Actual time may vary
+depending on your environment.
+

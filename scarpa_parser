@@ -1,0 +1,65 @@
+#!/usr/bin/perl
+
+####################################
+# Author: Nilgun Donmez
+# Date: September 4, 2012
+# Part of SCARPA package
+####################################
+
+use strict;
+use Getopt::Long;
+
+sub usage
+{
+	print "\nusage: scarpa_parser --errors|-e <no. mismatches> \n\n";
+	print "Part of SCARPA package. Takes a .SAM file from standard input ";
+	print "and converts it to a .map file to be used by SCARPA. ";
+	print "--errors option specify the maximum allowed mismatches or indels ";
+	print "in the mapping. Default value is 0. \n\n";
+	exit(0);
+}
+
+my $errcutoff = 0;
+my $hlp = 0;
+my $result = GetOptions("errors|e=i" => \$errcutoff, "help|h" => \$hlp);
+
+unless($result) { &usage; }
+if($hlp) { &usage; }
+
+while(<STDIN>)
+{
+	my $str = $_;
+	my @fields = split(' ', $str, 12);
+	if($fields[0] eq "\@SQ")
+	{
+		print "-1 ", substr($fields[1], 10), " ", substr($fields[2], 3), "\n";
+	}
+	elsif(not($fields[0] =~ /^@/))
+	{
+		my $numerr = 0;
+		if($fields[2] =~ /contig/)	# otherwise it did not map
+		{
+			if($fields[11] =~ /NM:i:([0-9]+)/)
+			{
+				$numerr = $1;
+			}
+			else
+			{	die "Unexpected formatting in SAM file. Exiting..."; }
+
+			if($numerr le $errcutoff)
+			{
+				print $fields[0];
+				if($fields[1] eq 16)
+				{
+					print " 1 ";
+				}
+				else
+				{
+					print " 2 ";
+				}
+				print substr($fields[2], 7), " ", $fields[3], " ", length($fields[9]), " ", $numerr, "\n";
+			}
+		}
+	}
+}
+
