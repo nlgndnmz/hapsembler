@@ -1,0 +1,43 @@
+#--------------------------------------------------------+++++++++++++++++++++
+#  makefile for ENCORE-0.1
+#
+#  "make"                 -> build all the binaries and move them to ./bin
+#  "make clean"           -> remove all *.o files and binaries
+#
+#--------------------------------------------------------+++++++++++++++++++++
+
+
+# change the following line to use a different C++ compiler
+CC = g++
+
+ifdef VDEBUG
+COPT = -Wall -g -O1
+else ifdef NO_OMP
+COPT = -Wall -O3
+else
+COPT = -Wall -O3 -fopenmp -DUSEOPENMP
+endif
+
+default: preprocr encore
+	mv encore preprocr ./bin
+	rm -f *.o
+
+DNAOBJECTIBLES = Dna DnaRead HapUtils KmerHash KmerIter KmerList Naive ReadAln ReadMatch SmithWaterman
+DNAOBJECTS=$(DNAOBJECTIBLES:=.o)
+DNAHEADERS=$(DNAOBJECTIBLES:=.h) GraphDef.h KmerNode.h
+
+encore: encore.o $(DNAOBJECTS)
+	$(CC) $(COPT) encore.o $(DNAOBJECTS) -o encore
+encore.o: DnaAlignment.cpp $(DNAHEADERS)
+	$(CC) -c $(COPT) -DCORRECTR DnaAlignment.cpp -o encore.o
+
+preprocr: preprocr.o $(DNAOBJECTS)
+	$(CC) $(COPT) preprocr.o $(DNAOBJECTS) -o preprocr
+preprocr.o: DnaAlignment.cpp $(DNAHEADERS)
+	$(CC) -c $(COPT) -DPREPROCR DnaAlignment.cpp -o preprocr.o
+
+%.o: %.cpp $(DNAHEADERS)
+	$(CC) -c $(COPT) $< -o $@
+
+clean:
+	rm -f *.o ./bin/encore ./bin/preprocr

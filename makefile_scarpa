@@ -1,0 +1,41 @@
+
+#--------------------------------------------------------+++++++++++++++++++++
+#  makefile for SCARPA-0.1
+#
+#  "make"                 -> build all the binaries and move them to ./bin
+#  "make clean"           -> remove all *.o files and binaries
+#
+#--------------------------------------------------------+++++++++++++++++++++
+
+
+# change the following line to use a different C++ compiler
+CC = g++
+
+ifdef VDEBUG
+COPT = -Wall -g -O1
+else ifdef NO_LP
+COPT = -Wall -O3
+else
+COPT = -Wall -O3 -DLPSOLVER
+endif
+
+default: scarpa
+	mv scarpa ./bin
+	rm -f *.o
+
+SCAOBJECTIBLES = BiEdge ContigEdge DirNode DnaRead HapUtils Naive ReadAln Scaffer SmithWaterman UEdge UGraph UNode
+SCAOBJECTS=$(SCAOBJECTIBLES:=.o)
+SCAHEADERS=$(SCAOBJECTIBLES:=.h) BiNode.h ContigNode.h GraphDef.h LinkedIter.h LinkedList.h LinkedNode.h lp_lib.h
+
+scarpa: $(SCAOBJECTS) scarpa.o
+	$(CC) $(COPT) scarpa.o $(SCAOBJECTS) liblpsolve55.a -o scarpa -lm -ldl
+scarpa.o: ScafferMain.cpp $(SCAHEADERS)
+	$(CC) -c $(COPT) ScafferMain.cpp -o scarpa.o
+
+%.o: %.cpp $(SCAHEADERS)
+	$(CC) -c $(COPT) $< -o $@
+
+clean:
+	rm -f *.o ./bin/scarpa
+
+
