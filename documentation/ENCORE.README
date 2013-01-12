@@ -1,4 +1,4 @@
--------------  Encore-1.1 INSTALLATION GUIDE --------------------------
+-------------  ENCORE INSTALLATION GUIDE --------------------------
 
 Last update: September 17, 2012
 
@@ -6,15 +6,15 @@ Last update: September 17, 2012
 
     Extract the tarfile by typing:
 
-tar -xvzf encore-1.1.tar.gz
+tar -xvzf encore-X.X.tar.gz
 
     After extracting the tarfile into the desired installation directory,
-change to the "encore-1.1" directory. Once in this directory, type:
+change to the "encore-X.X" directory. Once in this directory, type:
 
 make
 
     This command will create the binaries and place them under
-"encore-1.1/bin/". To make the executables accessible from different
+"encore-X.X/bin/". To make the executables accessible from different
 directories, simply add the full path of this directory to your system PATH.
 
     If your compiler does not support OpenMP, use the following command instead
@@ -27,7 +27,7 @@ You can control the number of threads used by Encore at runtime so there is
 no downside to compiling Encore with OpenMP support.
 
     If installation is succesfull you should see the following binaries
-under "encore-1.1/bin":
+under "encore-X.X/bin":
 
     preprocr
     encore

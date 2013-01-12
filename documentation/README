@@ -1,10 +1,10 @@
--------------  Hapsembler-2.0 README --------------------------
+-------------  HAPSEMBLER README --------------------------
 
 Last update: November 28, 2011
 
     Please note that this file is not a user guide and it is strongly
 recommended that you read the full manual which is located under
-"hapsembler-2.0/doc" before using Hapsembler. (You will need the Adobe
+"hapsembler-X.X/doc" before using Hapsembler. (You will need the Adobe
 Reader to view this file. You can download the Adobe Reader free of charge at
 http://get.adobe.com/reader/)
 
@@ -23,21 +23,21 @@ get basic information on how to use this script or another program in the
 package simply run it with no arguments.
 
 NOTE: To be able to run "hapsemble" you have to add the full path of Hapsembler
-bin directory (i.e. <hapsembler_installation_directory>/hapsembler-2.0/bin)
+bin directory (i.e. <hapsembler_installation_directory>/hapsembler-X.X/bin)
 to your system PATH.
 
     For information on the individual programs and advanced options please see
-the manual located under "hapsembler-2.0/doc".
+the manual located under "hapsembler-X.X/doc".
 
 -- RUNNING THE DEMO --
 
     To run the Hapsembler demo please see the file SAMPLE.README located under
-"hapsembler-2.0/samples".
+"hapsembler-X.X/sample".
 
 -- RUNNING CONTIGSTAT --
 
     This package includes a Perl script called "contigstat" (located under
-hapsembler-2.0/bin) to help you set certain parameters. If your copy of
+hapsembler-X.X/bin) to help you set certain parameters. If your copy of
 Perl is installed anywhere else than /usr/bin please change the first
 line of the script to the correct path. To get information on how to use
 this script, run it with no arguments.

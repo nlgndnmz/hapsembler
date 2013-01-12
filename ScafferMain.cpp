@@ -3,7 +3,7 @@
     $Date: 2011-12-02 13:24:00 -0500 (Fri, 02 Dec 2011) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2012,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,14 +27,17 @@
 #include <climits>
 #include <iostream>
 
+#include "HapSuite.h"
 #include "Scaffer.h"
 
 using namespace std;
 
-void usage(const char * progname, const char * badArg, const char * msg)
+void usage(const char * progName, const char * badArg, const char * msg)
 {
-	cerr << endl << badArg << " " << msg << endl << "SYNOPSIS" << endl;
-	cerr << "    " << progname << " -c <file> -l <file> -i <file> -o <file> \n\n\
+	cerr << endl << badArg << " " << msg << endl;
+	cerr << "Please see the README file for more information. Version " << SCARPAVERSION << "(suite: " << HAPVERSION << ")" << endl << endl;
+	
+	cerr << "    " << progName << " -c <file> -l <file> -i <file> -o <file> \n\n\
 OPTIONS \n\
     --contigs|-c contigs_filename \n\
         Fasta formatted file containing the contigs \n\

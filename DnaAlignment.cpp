@@ -26,19 +26,15 @@
 #include <ctime>
 #include <climits>
 
+#include "HapSuite.h"
 #include "Dna.h"
 
 using namespace std;
 
 void usage(const char * progName, const char * badArg, const char * msg)
 {
-#ifdef USEOPENMP
-	cerr << endl << "Part of Hapsembler package (version " << HAPVERSION << "). w/ omp. ";
-#else
-	cerr << endl << "Part of Hapsembler package (version " << HAPVERSION << "). ";
-#endif
-	cerr << "For more information see the README file." << endl;
-	cerr << endl << badArg << " " << msg << endl <<"SYNOPSIS" << endl;
+	cerr << endl << badArg << " " << msg << endl;
+	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(suite: " << HAPVERSION << ")" << endl << endl;
 
 #ifdef PREPROCR
 	cerr << "    " << progName << " -p <platform> -f <file> -o <file> " << endl << "\n\

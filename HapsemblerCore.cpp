@@ -27,6 +27,7 @@
 #include <fstream>
 #include <climits>
 
+#include "HapSuite.h"
 #include "HapUtils.h"
 #include "OvlGraph.h"
 
@@ -38,8 +39,7 @@ using namespace std;
 
 void usage(char * progname)
 {
-    cerr << endl << "Part of Hapsembler package (version " << HAPVERSION << "). ";
-    cerr << "For more information see the README file." << endl;
+	cerr << "Please see the README file for more information. Version " << HAPVERSION << endl << endl;
     cerr << "\n\
 SYNOPSIS \n\
     hapsemblr -r <file> -c <file> -g <genome size>\n\

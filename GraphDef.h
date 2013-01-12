@@ -33,8 +33,6 @@
 	#define NULL 0
 #endif
 
-#define HAPVERSION 1.1
-
 // flags for arrows (up to 128)
 #define OUTIE 1		// outward arrow
 #define INNIE 2		// inward arrow

@@ -1,6 +1,6 @@
-------------- Hapsembler-1.1 DEMO ---------------------
+------------- HAPSEMBLER DEMO ---------------------
 
-Last update: November 27, 2011
+Last update: January 11, 2012
 
 This directory should contain:
 
@@ -19,11 +19,11 @@ This directory should contain:
 How to run the demo:
 
     1) First, install Hapsembler following the instructions given in
-    "hapsembler-1.1/INSTALL".
+    "hapsembler-X.X/INSTALL".
 
-    2) Add the full path of "hapsembler-1.1/bin" to your system path.
+    2) Add the full path of "hapsembler-X.X/bin" to your system path.
 
-    3) Change your directory to "hapsembler-1.1/samples" and type:
+    3) Change your directory to "hapsembler-X.X/sample" and type:
 
     hapsemble -p illumina -g 40 -f sample_illu.fastq -l sample_illu.info
 
