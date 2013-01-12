@@ -34,8 +34,12 @@ using namespace std;
 void usage(const char * progName, const char * badArg, const char * msg)
 {
 	cerr << endl << badArg << " " << msg << endl;
-	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(suite: " << HAPVERSION << ")" << endl << endl;
-
+#ifdef USEOPENMP
+	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ") w/ OMP" << endl << endl;
+#else
+	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ")" << endl << endl;
+#endif
+	
 #ifdef PREPROCR
 	cerr << "    " << progName << " -p <platform> -f <file> -o <file> " << endl << "\n\
 OPTIONS \n\

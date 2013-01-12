@@ -35,7 +35,7 @@ using namespace std;
 void usage(const char * progName, const char * badArg, const char * msg)
 {
 	cerr << endl << badArg << " " << msg << endl;
-	cerr << "Please see the README file for more information. Version " << SCARPAVERSION << "(suite: " << HAPVERSION << ")" << endl << endl;
+	cerr << "Please see the README file for more information. Version " << SCARPAVERSION << "(hsv:" << HAPVERSION << ")" << endl << endl;
 	
 	cerr << "    " << progName << " -c <file> -l <file> -i <file> -o <file> \n\n\
 OPTIONS \n\

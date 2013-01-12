@@ -28,15 +28,15 @@ default: all
 
 DNAOBJECTIBLES = Dna DnaRead HapUtils KmerHash KmerIter KmerList Naive ReadAln ReadMatch SmithWaterman
 DNAOBJECTS=$(DNAOBJECTIBLES:=.o)
-DNAHEADERS=$(DNAOBJECTIBLES:=.h) KmerNode.h GraphDef.h
+DNAHEADERS=$(DNAOBJECTIBLES:=.h) KmerNode.h GraphDef.h HapSuite.h
 
 HAPOBJECTIBLES = BiEdge Containee EdgeTuple HapUtils MateEdge OvlEdge OvlGraph PathEdge
 HAPOBJECTS=$(HAPOBJECTIBLES:=.o)
-HAPHEADERS=$(HAPOBJECTIBLES:=.h) BiNode.h DnaTempl.h GraphDef.h LinkedIter.h LinkedList.h LinkedNode.h MatePair.h OvlGraphTempl.h PathNode.h ReadNode.h
+HAPHEADERS=$(HAPOBJECTIBLES:=.h) BiNode.h DnaTempl.h GraphDef.h HapSuite.h LinkedIter.h LinkedList.h LinkedNode.h MatePair.h OvlGraphTempl.h PathNode.h ReadNode.h
 
 SCAOBJECTIBLES = BiEdge ContigEdge DirNode DnaRead HapUtils Naive ReadAln Scaffer SmithWaterman UEdge UGraph UNode
 SCAOBJECTS=$(SCAOBJECTIBLES:=.o)
-SCAHEADERS=$(SCAOBJECTIBLES:=.h) BiNode.h ContigNode.h GraphDef.h LinkedIter.h LinkedList.h LinkedNode.h lp_lib.h
+SCAHEADERS=$(SCAOBJECTIBLES:=.h) BiNode.h ContigNode.h GraphDef.h HapSuite.h LinkedIter.h LinkedList.h LinkedNode.h lp_lib.h
 
 all: overlappr encore consensr preprocr hapsemblr scarpa
 

@@ -6,7 +6,7 @@ Last update: December 7, 2012
 included in the Scarpa package. You should see the following files under
 this directory:
 
-SAMPLE.README -> this file
+TEST.README -> this file
 contigs.fasta  ->  A fasta formatted file containing 93 contigs
 reads.fastq  ->  A fastq formatted file containing 37500 read pairs with 300bp mean insert size
 intermediate -> A directory containing 3 intermediate files

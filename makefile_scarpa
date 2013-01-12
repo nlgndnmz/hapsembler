@@ -25,7 +25,7 @@ default: scarpa
 
 SCAOBJECTIBLES = BiEdge ContigEdge DirNode DnaRead HapUtils Naive ReadAln Scaffer SmithWaterman UEdge UGraph UNode
 SCAOBJECTS=$(SCAOBJECTIBLES:=.o)
-SCAHEADERS=$(SCAOBJECTIBLES:=.h) BiNode.h ContigNode.h GraphDef.h LinkedIter.h LinkedList.h LinkedNode.h lp_lib.h
+SCAHEADERS=$(SCAOBJECTIBLES:=.h) BiNode.h ContigNode.h GraphDef.h HapSuite.h LinkedIter.h LinkedList.h LinkedNode.h lp_lib.h
 
 scarpa: $(SCAOBJECTS) scarpa.o
 	$(CC) $(COPT) scarpa.o $(SCAOBJECTS) liblpsolve55.a -o scarpa -lm -ldl

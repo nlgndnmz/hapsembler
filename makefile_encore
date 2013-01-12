@@ -24,7 +24,7 @@ default: preprocr encore
 
 DNAOBJECTIBLES = Dna DnaRead HapUtils KmerHash KmerIter KmerList Naive ReadAln ReadMatch SmithWaterman
 DNAOBJECTS=$(DNAOBJECTIBLES:=.o)
-DNAHEADERS=$(DNAOBJECTIBLES:=.h) GraphDef.h KmerNode.h
+DNAHEADERS=$(DNAOBJECTIBLES:=.h) GraphDef.h HapSuite.h KmerNode.h
 
 encore: encore.o $(DNAOBJECTS)
 	$(CC) $(COPT) encore.o $(DNAOBJECTS) -o encore
