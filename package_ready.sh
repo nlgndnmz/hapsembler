@@ -63,7 +63,7 @@ then
 	cp ./documentation/INSTALL ./$DNAME
 	cp ./documentation/LICENSE ./$DNAME
 	cp ./documentation/HapsemblerDocumentation.pdf ./$DNAME/doc/${DNAME}_manual.pdf
-	cp ./documentation/contigstat ./$DNAME/bin
+	cp ./contigstat ./$DNAME/bin
 	chmod 644 ./$DNAME/*.h
 	chmod 644 ./$DNAME/*.cpp
 	chmod 644 ./$DNAME/doc/*.pdf
