@@ -121,7 +121,7 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 		num_libs = 0;
 		ifstream infoFile2;
 		open_n_check(infoFile2, infoFilename);
-		while( infoFile2 >> start >> end >> insert_size >> deviation )
+		while( infoFile2 >> start >> end >> insert_size >> deviation >> ori )
 		{
 			int L = 0;
 			if(insert_size < 16000)

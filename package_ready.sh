@@ -52,7 +52,7 @@ then
 	cp LinkedIter.h LinkedList.h LinkedNode.h MateEdge.h MatePair.h Naive.h OvlEdge.h OvlGraph.h OvlGraphTempl.h PathEdge.h PathNode.h ReadAln.h ReadMatch.h ReadNode.h ./$DNAME
 	cp Scaffer.h SmithWaterman.h UEdge.h UGraph.h UNode.h ./$DNAME
 	cp BiEdge.cpp Containee.cpp ContigEdge.cpp DirNode.cpp Dna.cpp DnaAlignment.cpp DnaRead.cpp EdgeTuple.cpp HapsemblerCore.cpp HapUtils.cpp KmerHash.cpp KmerIter.cpp KmerList.cpp ./$DNAME
-	cp MateEdge.cpp Naive.cpp OvlEdge.cpp OvlGraph.cpp PathEdge.cpp ReadAln.cpp ReadMatch.cpp Scaffer.cpp SmithWaterman.cpp UEdge.cpp UGraph.cpp UNode.cpp ./$DNAME
+	cp MateEdge.cpp Naive.cpp OvlEdge.cpp OvlGraph.cpp PathEdge.cpp ReadAln.cpp ReadMatch.cpp Scaffer.cpp ScafferMain.cpp SmithWaterman.cpp UEdge.cpp UGraph.cpp UNode.cpp ./$DNAME
 	cp lp_Hash.h lp_lib.h lp_matrix.h lp_mipbb.h lp_SOS.h lp_types.h lp_utils.h liblpsolve55.a liblpsolve55.so ./$DNAME
 	cp hapsemble.sh ./$DNAME/bin/hapsemble
 	cp makefile ./$DNAME
