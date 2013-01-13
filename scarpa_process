@@ -11,14 +11,14 @@ use Getopt::Long;
 
 sub usage
 {
-	print "\nusage: scarpa_process -c <contigs> -f <reads> -i <insert size> -o <orientation>\n\n";
-	print "Part of SCARPA package. Prepares the contigs and reads for mapping.\n";
-	print "<contigs> must be a fasta file. \n";
-	print "<reads> must be a fastq file and it must contain each read pair consecutively. \n";
-	print "<insert size> is the estimated insert size for the library in base pairs. \n";
-	print "<orientation> use 1 for forward-reverse (paired-end), 2 for forward-forward (Roche/454), 3 for reverse-forward (mate-pair). \n\n"; 
-	print "You may input more than one library by repeating: -f <reads> -i <insert size> \n";
-	print "For more information see the README file included with the package. \n\n";
+	print STDERR "\nusage: scarpa_process -c <contigs> -f <reads> -i <insert size> -o <orientation>\n\n";
+	print STDERR "Part of SCARPA package. Prepares the contigs and reads for mapping.\n";
+	print STDERR "<contigs> must be a fasta file. \n";
+	print STDERR "<reads> must be a fastq file and it must contain each read pair consecutively. \n";
+	print STDERR "<insert size> is the estimated insert size for the library in base pairs. \n";
+	print STDERR "<orientation> use 1 for forward-reverse (paired-end), 2 for forward-forward (Roche/454), 3 for reverse-forward (mate-pair). \n\n"; 
+	print STDERR "You may input more than one library by repeating: -f <reads> -i <insert size> \n";
+	print STDERR "For more information see the README file included with the package. \n\n";
 	exit(0);
 }
 

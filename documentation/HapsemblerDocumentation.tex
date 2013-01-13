@@ -8,6 +8,10 @@
 \usepackage{url}
 \usepackage{amssymb}
 
+\usepackage{listings}
+\lstset{breaklines=true} 
+\lstset{basicstyle=\small}
+
 \usepackage{hyperref}
 \hypersetup{
     colorlinks,
@@ -143,10 +147,71 @@ The Hapsembler pipeline is distributed among several executables under into 3 ma
 
 \texttt{preprocr} is a utility program that helps prepare your data for further steps in the assembly. We recommend using this tool if you have long ($>$150bp) Illumina reads or Roche/454 reads in order to quality trim the reads. If you have separate files for different libraries, you can run this tool separately on each file. If you have paired reads in two complementary files you can also merge them using \texttt{preprocr} (see options below). Note that \texttt{preprocr} does not trim for vector sequences. If your data contain any barcodes or vector sequences, please remove these before using \texttt{preprocr}.
 
+\begin{lstlisting}
+
+SYNOPSIS
+    ./preprocr -p <platform> -f <file> -o <file> 
+
+OPTIONS 
+    --platform|-p [illumina|fourfivefour] 
+        Defines the type of the platform the reads are produced from (required) 
+
+    --fastq|-f fastq_filename 
+        Fastq formatted input file (required) 
+
+    --fastq2|-x fastq_filename 
+        The second reads in fastq format for paired libraries. The order of the reads should match the order of the reads in the file given with --fastq option. 
+
+    --output|-o output_filename 
+        Output filename. Default is standard output. 
+
+    --revcomp|-n [1|2|3] 
+        Reverse complement the first (1), the second (2) or both (3) reads in a read pair. If this option is set all reads are taken to be paired. 
+
+    --phred|-d N 
+        Set the phred offset for the quality values to N. Default value is 33 for fourfivefour and 64 for illumina. 
+
+    --threshold|-s E 
+        Set the threshold for trimming. E must be a real number between 0.0 (no trimming) and 0.5 (most trimming). Default values are 0.05 for illumina and 0.1 for fourfivefour. 
+
+\end{lstlisting}
+
 \subsubsection{encore}
 \label{ercor}
 
 Once you prepare your reads, you should run the error correction program \texttt{encore}. You can use this program even if you do not intend to perform \emph{de novo} assembly on your reads, for instance as preprocessing for SNP detection, reference-guided assembly, etc.
+
+\begin{lstlisting}
+
+SYNOPSIS
+    ./encore -p <platform> -f <file> -o <file> -g <genome> 
+
+OPTIONS 
+    --platform|-p [illumina|fourfivefour] 
+        Define the type of the platform the reads are produced from (required) 
+
+    --fastq|-f fastq_filename 
+        Fastq formatted input file (required) 
+
+    --output|-o output_filename 
+        Output filename for corrected reads (required) 
+
+    --genome|-g V 
+        Estimated genome size in kilo base pairs. (required) 
+
+    --nthreads|-t K 
+        Use K number of threads (ignored if program is not compiled with OMP_OK=1) 
+
+    --onestrand|-a [yes|no] 
+        If set to yes, the reads are treated as single stranded. Default value is no. 
+
+    --epsilon|-e X (real number) 
+        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. Default values for illumina and fourfivefour are 0.04 and 0.06 respectively. 
+
+    --phred|-d N 
+        Set the phred offset for the quality values to N. Default value is 33 for fourfivefour and 64 for illumina. 
+
+\end{lstlisting}
 
 \subsection{Genome Assembly}
 
@@ -156,19 +221,97 @@ Once you prepare your reads, you should run the error correction program \texttt
 graph. It takes the reads in fastq format and outputs two files containing the reads and overlaps. These two files are
 required by \texttt{hapsemblr} (discussed below).
 
+\begin{lstlisting}
+
+SYNOPSIS
+    ./overlappr -p <platform> -f <file> -o <prefix> -g <genome>
+
+OPTIONS 
+    --platform|-p [illumina|fourfivefour] 
+        Define the type of the platform the reads are produced from (required) 
+
+    --fastq|-f fastq_filename 
+        Fastq formatted input file (required) 
+
+    --output|-o prefix 
+        Prefix for output files 
+
+    --genome|-g V 
+        Estimated genome size in kilo base pairs. (required) 
+
+    --nthreads|-t K 
+        Use K number of threads (ignored if program is not compiled with OMP_OK=1) 
+
+    --onestrand|-a [yes|no] 
+        If set to yes, the reads are treated as single stranded. Default value is no. 
+
+    --epsilon|-e X (real number) 
+        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively. 
+
+\end{lstlisting}
+
 \subsubsection{hapsemblr}
 
 \texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly.
 It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required
 by \texttt{consensr}, which is then converted to a fasta file containing the contigs (see below).
 
+\begin{lstlisting}
+
+SYNOPSIS
+    hapsemblr -r <file> -c <file> -g <genome size>
+
+OPTIONS 
+    --prefix|-r reads_filename 
+        Prefix of the files produced by overlappr (required) 
+
+    --contigs|-c contigs_filename 
+        Output filename for contigs (required) 
+
+    --genome|-g genome_size 
+        Estimated genome size in kilo base pairs (required) 
+
+    --library|-l library_filename 
+        File containing information about libraries. If unset, all reads are taken to be single production. 
+
+    --onestrand|-a [yes|no] 
+        If set to yes, performs strand specific assembly. This option can not be turned on if -l option is set. Default value is no. 
+
+    --calibrate|-b [yes|no] 
+        If set to yes, re-calculates the mean and standard deviation of each library. The default is yes. 
+
+\end{lstlisting}
+
 \subsubsection{consensr}
 \label{cons}
 
-\texttt{consensr} computes a consensus alignment for each contig produced by \texttt{hapsemblr} and writes the results into a single
-fasta formatted file. As input, it takes a fastq file containing the reads and a file containing the contigs as output by
-\texttt{hapsemblr}. Note that the fastq file given as input to \texttt{consensr} should be
-identical to the one given as input to \texttt{overlappr}.
+\texttt{consensr} computes a consensus alignment for each contig produced by \texttt{hapsemblr} and writes the results into a single fasta formatted file. As input, it takes a fastq file containing the reads and a file containing the contigs as output by \texttt{hapsemblr}. Note that the fastq file given as input to \texttt{consensr} should be identical to the one given as input to \texttt{overlappr}.
+
+\begin{lstlisting}
+
+SYNOPSIS
+    ./consensr -p <platform> -f <file> -c <file> -o <file> 
+
+OPTIONS 
+    --platform|-p [illumina|fourfivefour] 
+        Define the type of the platform the reads are produced from (required) 
+
+    --fastq|-f fastq_filename 
+        Fastq formatted input file (required) 
+
+    --contigs|-c contigs_filename 
+        Contig file produced by hapsemblr (required) 
+
+    --output|-o output_filename 
+        Output file for contigs (required) 
+
+    --min-size|-m N (integer) 
+        Set the minimum size of a contig to be reported to N (in bp). Default value is 200. 
+
+    --phred|-d N 
+        Set the phred offset for the quality values to N. Default value is 33 for fourfivefour and 64 for illumina. 
+
+\end{lstlisting}
 
 \subsubsection{hapsemble}
 \label{hapscript}
@@ -184,6 +327,38 @@ You can use the stage option to re-evaluate one or more stages due to previous f
 \subsubsection{scarpa\_parser}
 
 \subsubsection{scarpa}
+
+\begin{lstlisting}
+
+SYNOPSIS
+    ./scarpa -c <file> -l <file> -i <file> -o <file> 
+
+OPTIONS 
+    --contigs|-c contigs_filename 
+        Fasta formatted file containing the contigs 
+
+    --library|-l libraries_filename 
+        File containing the paired read library information 
+
+    --mappings|-i mappings_filename 
+        File containing the read mappings 
+
+    --output|-o output_filename 
+        Output file for scaffolds 
+
+ADVANCED OPTIONS 
+    --calibrate|-b [yes|no] 
+        If set to yes, re-calculates the mean and standard deviation of each library. The default is yes. 
+    --min_support N 
+        Sets the minimum number of mate links to connect two contigs to N. Default value is 2. 
+    --max_removal N 
+        Sets the maximum number of contigs that can be removed during the orientation step to N. Default value is 6. 
+    --max_overlap N 
+        Sets the maximum overlap (in bp) between two adjacent contigs to N. 
+    --min_contig N 
+        Sets the minimum contig size (in bp) to be used in scaffolding to N. 
+
+\end{lstlisting}
 
 \section{Memory Usage}
 

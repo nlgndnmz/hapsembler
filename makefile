@@ -11,15 +11,17 @@
 CC = g++
 
 ifdef VDEBUG
-COPT = -Wall -g -O1
+TOPT = -Wall -g -O1
 else ifdef NO_OMP
-COPT = -Wall -O3
+TOPT = -Wall -O3
 else
-COPT = -Wall -O3 -fopenmp -DUSEOPENMP
+TOPT = -Wall -O3 -fopenmp -DUSEOPENMP
 endif
 
 ifndef NO_LP
-COPT = $(COPT) -DLPSOLVER
+COPT = $(TOPT) -DLPSOLVER
+else
+COPT = $(TOPT)
 endif
 
 default: all

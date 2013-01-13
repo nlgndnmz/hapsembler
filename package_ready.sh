@@ -64,12 +64,16 @@ then
 	cp ./documentation/LICENSE ./$DNAME
 	cp ./documentation/HapsemblerDocumentation.pdf ./$DNAME/doc/${DNAME}_manual.pdf
 	cp ./contigstat ./$DNAME/bin
+	cp scarpa_parser ./$DNAME/bin
+	cp scarpa_process ./$DNAME/bin
 	chmod 644 ./$DNAME/*.h
 	chmod 644 ./$DNAME/*.cpp
 	chmod 644 ./$DNAME/doc/*.pdf
 	chmod 644 ./$DNAME/sample/*.*
 	chmod 744 ./$DNAME/bin/contigstat
 	chmod 744 ./$DNAME/bin/hapsemble
+	chmod 744 ./$DNAME/bin/scarpa_parser
+	chmod 744 ./$DNAME/bin/scarpa_process
 fi
 
 tar -zcvf $DNAME".tar.gz" ./$DNAME
