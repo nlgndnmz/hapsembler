@@ -3,7 +3,7 @@
 ####################################
 # Author: Nilgun Donmez
 # Date: September 4, 2012
-# Part of SCARPA package
+# Part of Scarpa package
 ####################################
 
 use strict;
@@ -11,13 +11,11 @@ use Getopt::Long;
 
 sub usage
 {
-	print STDERR "\nusage: scarpa_process -c <contigs> -f <reads> -i <insert size> -o <orientation>\n\n";
-	print STDERR "Part of SCARPA package. Prepares the contigs and reads for mapping.\n";
+	print STDERR "\nusage: scarpa_process -c <contigs> -f <reads> -i <insert size> \n\n";
+	print STDERR "Part of Scarpa package. Prepares the contigs and reads for mapping.\n";
 	print STDERR "<contigs> must be a fasta file. \n";
 	print STDERR "<reads> must be a fastq file and it must contain each read pair consecutively. \n";
 	print STDERR "<insert size> is the estimated insert size for the library in base pairs. \n";
-	print STDERR "<orientation> use 1 for forward-reverse (paired-end), 2 for forward-forward (Roche/454), 3 for reverse-forward (mate-pair). \n\n"; 
-	print STDERR "You may input more than one library by repeating: -f <reads> -i <insert size> \n";
 	print STDERR "For more information see the README file included with the package. \n\n";
 	exit(0);
 }
@@ -28,12 +26,10 @@ if($#ARGV < 7)
 my $contigfile;
 my @fastqfiles;
 my @libraries;
-my @orients;
 my $hlp = 0;
 my $result = GetOptions("contigs|c=s" => \$contigfile,
 						"fastq|f=s" => \@fastqfiles,
 						"info|i=i" => \@libraries,
-						"orientation|o=i" => \@orients,
 						"help|h" => \$hlp);
 
 
@@ -83,14 +79,13 @@ foreach $readfile (@fastqfiles)
 		if($ln eq 4)
 		{	$ln = 0;	}
 	}
-	my $ori = $orients[$lib];
 	my $mean = $libraries[$lib++];
 	my $dev = int(0.1 * $mean);
 	my $end = $num - 1;
 
 	if($end%2==1) { die "ERROR: An odd number of reads found in file: $readfile. Aborting..."; }
 
-	print FH "$end $mean $dev $ori\n";
+	print FH "$end $mean $dev 1\n";
 	close(INFH);
 	close(OUTFH);
 }

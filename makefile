@@ -27,7 +27,11 @@ endif
 default: all
 	mv overlappr encore consensr preprocr hapsemblr scarpa ./bin
 	rm -f *.o
-
+	
+custom: assem
+	mv overlappr encore consensr preprocr hapsemblr ./bin
+	rm -f *.o
+	
 DNAOBJECTIBLES = Dna DnaRead HapUtils KmerHash KmerIter KmerList Naive ReadAln ReadMatch SmithWaterman
 DNAOBJECTS=$(DNAOBJECTIBLES:=.o)
 DNAHEADERS=$(DNAOBJECTIBLES:=.h) KmerNode.h GraphDef.h HapSuite.h
@@ -41,6 +45,7 @@ SCAOBJECTS=$(SCAOBJECTIBLES:=.o)
 SCAHEADERS=$(SCAOBJECTIBLES:=.h) BiNode.h ContigNode.h GraphDef.h HapSuite.h LinkedIter.h LinkedList.h LinkedNode.h lp_lib.h
 
 all: overlappr encore consensr preprocr hapsemblr scarpa
+assem: overlappr encore consensr preprocr hapsemblr
 
 overlappr: overlappr.o $(DNAOBJECTS)
 	$(CC) $(COPT) overlappr.o $(DNAOBJECTS) -o overlappr

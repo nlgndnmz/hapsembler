@@ -22,8 +22,8 @@ directories, simply add the full path of this directory to your system PATH.
 
 -- SYSTEM REQUIREMENTS ------------------------------------------------
 
-    SCARPA package requires the following to install and run successfully.
-Listed in parenthesis are the versions used to test the current SCARPA
+    Scarpa package requires the following to install and run successfully.
+Listed in parenthesis are the versions used to test the current Scarpa
 package. These utilities must be accessible via the system path:
 
     - make (GNU make 3.81)
@@ -36,11 +36,11 @@ Bowtie ( http://bowtie-bio.sourceforge.net/index.shtml ) or BWA
 for your sequencing platform provided that it can report its output in SAM
 format.
 
-    Note that SCARPA comes bundled with the lp_solve library (version 5.5.2)
+    Note that Scarpa comes bundled with the lp_solve library (version 5.5.2)
 for 64-bit Linux. If you have a 32-bit system, you will have to download the
 appropriate file (i.e. lp_solve_5.5.2.0_dev_ux32.tar.gz) from
-http://sourceforge.net/projects/lpsolve/ in order to compile SCARPA. However,
-we strongly recommend running SCARPA on a 64-bit environment since large
+http://sourceforge.net/projects/lpsolve/ in order to compile Scarpa. However,
+we strongly recommend running Scarpa on a 64-bit environment since large
 datasets may require over 4GB memory.
 
     Windows and MAC environments are not supported at the moment. Please send
@@ -108,7 +108,7 @@ subsequently to free disk space.
     2) Processing the mappings:
     ---------------------------
 
-    Before running SCARPA, you need to process the mappings using the script
+    Before running Scarpa, you need to process the mappings using the script
 scarpa_parser using the following command:
 
 cat <sam file> | scarpa_parser [-e <maximum # of mismatches>] > <map file>
@@ -120,7 +120,7 @@ you can pipe its output directly to scarpa_parser. This can save significant
 time and disk space for large datasets.
 
     ------------------
-    3) Running scarpa:
+    3) Running Scarpa:
     ------------------
 
     In this last step, simply run the following command:
@@ -139,3 +139,10 @@ scarpa with no arguments.
 -- TESTING SCARPA -----------------------------------------------------
 
     See the TEST.README file under "scarpa-X.X/test".
+	
+-- MORE INFORMATION ---------------------------------------------------
+
+	If you have questions or need more help running Scarpa, please download 
+the extensive Hapsembler(+Encore&Scarpa) manual from
+http://compbio.cs.toronto.edu/hapsembler which includes information on how
+to run Scarpa and answers to frequently asked questions.

@@ -22,7 +22,7 @@
 }
 
 % change the following to the package version
-\newcommand{\hapversion}{2.1}
+\newcommand{\hapversion}{2.0}
 
 \title{Hapsembler (version \hapversion{}) \\ ( + Encore \& Scarpa) \\ Manual }
 
@@ -46,14 +46,16 @@
 
 \section{Introduction}
 
-We are happy to release the second major version of Hapsembler. Hapsembler version \hapversion{} features automated setting of most parameters and added options such as estimation of library statistics. The new Hapsembler package also includes the scaffolding tool Scarpa, which can be used as a stand alone scaffolder. In addition, Scarpa and the read correction module Encore are now also released separately. See \url{http://compbio.cs.toronto.edu/hapsembler} for details. 
+We are proud to release the second major version of Hapsembler. Hapsembler version \hapversion{} features automated setting of most parameters and added options such as estimation of library statistics. The new Hapsembler package also includes the scaffolding tool Scarpa, which can be used as a stand-alone scaffolder. 
+
+If you are only interested in scaffolding or error correction, Scarpa and the read correction module Encore are also released separately. See \url{http://compbio.cs.toronto.edu/hapsembler} for details. 
 
 \section{Installation}
 
 To install Hapsembler download the package available at \url{http://compbio.cs.toronto.edu/hapsembler} and run:
 
 \begin{verbatim}
-tar -xzvf hapsembler-2.1.tar.gz
+tar -xzvf hapsembler-2.0.tar.gz
 \end{verbatim}
 
 Once the files are extracted, change your directory to hapsembler-\hapversion{} and type:
@@ -77,32 +79,39 @@ The Hapsembler package requires the following to install and run successfully. L
     - perl (v5.8.8)
 \end{verbatim}
 
-Additionally, you will need OpenMP to run Hapsembler in multi-threaded more. You can get the list of compilers supporting OpenMP at \url{http://openmp.org/wp/}. Note that you can control the number of threads used by Hapsembler at runtime so there is no downside to compiling Hapsembler with this option. If you are unable to obtain a compiler that supports OpenMP you can still compile the binaries for single-threaded use with the following directive:
+You will need OpenMP to run Hapsembler in multi-threaded more. You can get the list of compilers supporting OpenMP at \url{http://openmp.org/wp/}. Note that you can control the number of threads used by Hapsembler at runtime so there is no downside to compiling Hapsembler with this option. If you are unable to obtain a compiler that supports OpenMP you can still compile the binaries for single-threaded use with the following directive:
 
 \begin{verbatim}
 make NO_OMP=1
 \end{verbatim}
 
-Note that Hapsembler comes bundled with the lp\_solve library (version 5.5.2) for 64-bit Linux. If you have a 32-bit system, you will have to download the appropriate files from \url{http://sourceforge.net/projects/lpsolve/} in order to compile the scaffolding module. Nonetheless, we strongly recommend that you compile and run all Hapsembler tools in a 64-bit architecture.
+In addition, you will need an efficient read mapping software ( e.g. Bowtie \url{http://bowtie-bio.sourceforge.net/index.shtml} , BWA
+\url{http://bio-bwa.sourceforge.net/} , etc ) in order to use the scaffolding module Scarpa. You may use any mapping software available for your sequencing platform provided that it can report its output in SAM format.
+
+Note that Hapsembler comes bundled with the lp\_solve library (version 5.5.2) for 64-bit Linux. If you have a 32-bit system, you will have to download the appropriate files from \url{http://sourceforge.net/projects/lpsolve/} and change the makefile accordingly in order to compile Scarpa. Nonetheless, we strongly recommend that you compile and run all Hapsembler tools in a 64-bit architecture. 
+
+If you do not intend to perform scaffolding, use the directive:
+
+\begin{verbatim}
+make custom NO_LP=1
+\end{verbatim}
+
+This will allow you to compile the rest of the binaries without having to obtain the appropriate lp\_solve library for your system.
 
 Make sure you have sufficient memory and disk space available to Hapsembler before running. A minimum of 16GB memory is recommended. Typically, Hapsembler will require around 3-4 times the memory that is required to store the reads. Keep in mind that actual requirements will vary with sequence coverage depth and repeat structure of the genome.
 
 \section{Changes from the previous release}
 
-In addition to changes to the code base, Hapsembler \hapversion{} has a slightly different user interface. Some parameters are now automatically set for convenience and more robust results. The following is a list of the parameter/option changes from the previous release:
+In addition to changes to the code base, Hapsembler \hapversion{} has undergone various user interface changes. Some parameters are now automatically set for convenience and more robust results. The default values of some of the parameters have also changed. Although we include a(n incomplete) list of major changes from the previous releases below, due to the high volume of modification and additions, we kindly request that our old users read this documentation in full.
 
 \subsection{From Hapsembler-1.1:}
 
-\subsection{From Hapsembler-0.1:}
-
 \begin{itemize}
-\item An option called \texttt{onestrand} is added to \texttt{encore}, \texttt{overlappr} and \texttt{hapsemblr} for single-strand sequencing (eg. RNA-seq). See the related sections for further information. \\
-\item \texttt{--MAX\_READ\_SIZE} option is depreciated. This value is now determined from the input. \\
-\item \texttt{preprocr} no longer supports fasta formatted files. All input files must be in fastq format. However, now you can specify paired reads in two files and reverse complement them on the fly. See the corresponding section for details. \\
-\item \texttt{--platform} argument no longer takes \texttt{sanger} as an option. Sanger reads are no longer supported but if you still wish to use Hapsembler, you may be able to assemble them with the \texttt{fourfivefour} option.
+\item \texttt{correctr} has been replaced by a new tool named \texttt{encore}.
+\item \texttt{hapsemble} wrapper script now only runs \texttt{overlappr}, \texttt{hapsemblr} and \texttt{consensr}.
+\item The advanced parameters \texttt{--KMER\_SIZE}, \texttt{--MIN\_OVERLAP} and \texttt{--COVERAGE\_CUTOFF} are now set automatically. Other advanced parameters are integrated into dividual tools.
+\item \texttt{--diploid} and \texttt{--sdwidth} arguments are deprecated. Instead, a new option named \texttt{--calibrate} is added to \texttt{hapsemblr}. If toggled on, this option lets \texttt{hapsemblr} re-estimate the mean and standard deviation of each paired-end library.
 \end{itemize}
-
-Aside from the list above, the default values of some of the parameters also changed. Please run the tools with no argument or search the corresponding section below to see the new default values.
 
 \section{Data preperation}
 \label{data}
@@ -120,7 +129,7 @@ For instance, the following library info file:
 24000001 34000000 700 70 1
 \end{verbatim}
 
-indicates that the data consists of 2 libraries (possibly followed by some single-end reads). The first library includes the first 24m reads in the fastq file and has a mean insert size and standard deviation of 300bp and 30bp respectively. The second library contains the next 10m reads and has a mean and standard deviation of 700bp and 70bp respectively. The last column is a flag reserved for future use. The rest of the reads (if any) are taken to be single reads. 
+indicates that the data consists of 2 libraries (possibly followed by some single-end reads). The first library includes the first 24m reads in the fastq file and has a mean insert size and standard deviation of 300bp and 30bp respectively. The second library contains the next 10m reads and has a mean and standard deviation of 700bp and 70bp respectively. The last column (i.e 1) is a flag reserved for future use. The rest of the reads (if any) are taken to be single reads. 
 
 Note that paired reads must come BEFORE any single reads in the input file and each pair must be consecutive in the file. The paired reads should be sampled from opposite strands and face towards each other:
 
@@ -136,13 +145,19 @@ Genome:
 
 If your reads are in an orientation different from above, you have to reverse complement them. For your convenience, the utility tool \texttt{preprocr} included in this package has an option to reverse complement either of the reads. See section \ref{utils} for further information.
 
-\section{Running Hapsembler}
+\subsection{A note about Illumina mate-pairs}
 
-The Hapsembler pipeline is distributed among several executables under into 3 main stages: 1) error correction 2) genome assembly and 3) scaffolding. This section describes each stage in detail and how to use the individual tools. If you forget the options available to any Hapsembler program, simply run it with option "--help" and a help message will be displayed. Note that the order of the options do not matter.
+According to recent studies REF, mate-pair production reads may have a high percentage of chimeric reads. For this reason, we do not recommend using mate-pairs during the contig assembly stage. Instead, we suggest that these reads are included during the scaffolding phase as described in section \ref{scaff}. 
 
-\subsection{Error Correction}
+\section{Hapsembler Pipeline}
 
-\subsubsection{preprocr}
+The Hapsembler pipeline is distributed among several executables under 3 main stages: 1) error correction 2) genome assembly and 3) scaffolding. The following sections describe each stage in detail and how to use the individual tools. If you forget the options available to any program in the Hapsembler package, simply run it with option "--help" and a help message will be displayed.
+
+\section{Error Correction}
+
+This stage is performed to boost the quality of your sequencing reads by quality trimming and/or correction of sequencing errors. If you have reasons to believe you have high quality reads (e.g. simulated reads) you may skip this stage and proceed with assembly (see section \ref{assem}).
+
+\subsection{preprocr}
 \label{utils}
 
 \texttt{preprocr} is a utility program that helps prepare your data for further steps in the assembly. We recommend using this tool if you have long ($>$150bp) Illumina reads or Roche/454 reads in order to quality trim the reads. If you have separate files for different libraries, you can run this tool separately on each file. If you have paired reads in two complementary files you can also merge them using \texttt{preprocr} (see options below). Note that \texttt{preprocr} does not trim for vector sequences. If your data contain any barcodes or vector sequences, please remove these before using \texttt{preprocr}.
@@ -176,7 +191,7 @@ OPTIONS
 
 \end{lstlisting}
 
-\subsubsection{encore}
+\subsection{encore}
 \label{ercor}
 
 Once you prepare your reads, you should run the error correction program \texttt{encore}. You can use this program even if you do not intend to perform \emph{de novo} assembly on your reads, for instance as preprocessing for SNP detection, reference-guided assembly, etc.
@@ -213,13 +228,23 @@ OPTIONS
 
 \end{lstlisting}
 
-\subsection{Genome Assembly}
+\subsection{Performance}
 
-\subsubsection{overlappr}
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirement for \texttt{encore} is:
 
-\texttt{overlappr} is a tool that computes the overlaps between the reads, which form the basis of the overlap
-graph. It takes the reads in fastq format and outputs two files containing the reads and overlaps. These two files are
-required by \texttt{hapsemblr} (discussed below).
+\begin{equation}
+2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
+\end{equation}
+
+where $C$ is a small (usually less than 1GB) overhead. The memory requirement for \texttt{preprocr} is constant. Note that the equation above is a lower bound on the memory and the actual requirement may vary slightly with the environment. The speed-up gained from multiple-threads is almost linear with the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading (max 32 threads) if you have sufficient memory available.
+
+\section{Genome Assembly}
+
+The main pipeline of contig assembly consists of the following programs: \texttt{overlappr}, \texttt{hapsemblr} and \texttt{consensr}. These can either be run individually, or through the wrapper shell script \texttt{hapsemble}. We first give details of the individual programs and then explain how to use the wrapper script.
+
+\subsection{overlappr}
+
+\texttt{overlappr} is a tool that computes the overlaps between the reads, which form the basis of the overlap graph. It takes the reads in fastq format and outputs two files containing the reads and overlaps. These two files are required by \texttt{hapsemblr} (discussed below).
 
 \begin{lstlisting}
 
@@ -250,11 +275,9 @@ OPTIONS
 
 \end{lstlisting}
 
-\subsubsection{hapsemblr}
+\subsection{hapsemblr}
 
-\texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly.
-It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required
-by \texttt{consensr}, which is then converted to a fasta file containing the contigs (see below).
+\texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly. It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required by \texttt{consensr}, which is then converted to a fasta file containing the contigs (see below).
 
 \begin{lstlisting}
 
@@ -262,7 +285,7 @@ SYNOPSIS
     hapsemblr -r <file> -c <file> -g <genome size>
 
 OPTIONS 
-    --prefix|-r reads_filename 
+    --prefix|-r prefix
         Prefix of the files produced by overlappr (required) 
 
     --contigs|-c contigs_filename 
@@ -282,7 +305,7 @@ OPTIONS
 
 \end{lstlisting}
 
-\subsubsection{consensr}
+\subsection{consensr}
 \label{cons}
 
 \texttt{consensr} computes a consensus alignment for each contig produced by \texttt{hapsemblr} and writes the results into a single fasta formatted file. As input, it takes a fastq file containing the reads and a file containing the contigs as output by \texttt{hapsemblr}. Note that the fastq file given as input to \texttt{consensr} should be identical to the one given as input to \texttt{overlappr}.
@@ -313,20 +336,77 @@ OPTIONS
 
 \end{lstlisting}
 
-\subsubsection{hapsemble}
+\subsection{hapsemble}
 \label{hapscript}
 
-\texttt{hapsemble} is a wrapper script that executes the programs in the Hapsembler pipeline in a logical order. Note that this script will not work unless the full path of the Hapsembler bin directory is added to your system path. The synopsis of the script and the basic options are described below.
+\texttt{hapsemble} is a wrapper script that executes the programs in the core Hapsembler pipeline in a logical order. Note that this script will not work unless the full path of the Hapsembler bin directory is added to your system path. The synopsis of the script and the basic options are described below.
+
+
 
 You can use the stage option to re-evaluate one or more stages due to previous failures or due to option changes. For instance, if you would like to re-run \texttt{hapsemblr} but this time allow 4 standard deviations when connecting mate pairs, you can change the corresponding option and set the stage-start to 4 and only the last two steps of the pipeline will be executed. Aside from the common options described above, this script can also take a number of advanced options to further control the assembly process. These options are described in the next section.
 
-\subsection{Scaffolding}
+\subsection{Performance}
 
-\subsubsection{scarpa\_process}
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirements for \texttt{overlappr} and \texttt{consensr} are:
 
-\subsubsection{scarpa\_parser}
+\begin{eqnarray}
+M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
+2M + 37n + C
+\end{eqnarray}
 
-\subsubsection{scarpa}
+where $C$ is a small (usually less than 1GB) overhead. Note that, the above should still be taken as lower bounds: the actual memory used by these programs might vary in different environments. The memory requirements of \texttt{hapsemblr} is harder to estimate since it depends on factors that can not be immediately measured using the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
+
+\section{Scaffolding}
+\label{scaff}
+
+Although \texttt{hapsemblr} uses paired reads to resolve repeats and polymorphism, it does not perform ``gapped'' scaffolding: if there is a coverage gap between a read pair, this pair is not utilized. To leverage such pairs and to make better use of long insert libraries, from version \hapversion{} onwards, Hapsembler is bundled with the scaffolding tool Scarpa. 
+
+Below we give information on how to use Scarpa. Since Scarpa is designed as a stand-alone tool, the discussion in this section is valid on the output of any assembler unless stated otherwise.
+
+\subsection{scarpa\_process}
+
+As a first step, the reads and contigs have to be prepared using the perl script scarpa\_process:
+
+\begin{lstlisting}
+
+SYNOPSIS
+	scarpa_process -c <contigs> -f <reads> -i <insert size>
+
+OPTIONS
+    <contigs> -> is a fasta file containing the contigs.
+    <reads> -> is a fastq file containing each read pair in a consecutive order.
+    <insert size> -> is the insert size of the library in base pairs.
+
+\end{lstlisting}
+
+Above, the orientation of the reads are expected to be forward-reverse. If you have more than one library, you can use the -f and -i options repeatedly. For example, if you have two libraries in files lib1.fastq and lib2.fastq with insert sizes 300bp and 600bp, respectively:
+
+\begin{lstlisting}
+scarpa_process -c contigs.fasta -f lib1.fastq -i 300 -f lib2.fastq -i 600
+\end{lstlisting}
+
+This command will produce the following files:
+
+\begin{lstlisting}
+contigs.fasta.scarpa.fa
+contigs.fasta.scarpa.info
+lib1.fastq.scarpa.fq
+lib2.fastq.scarpa.fq
+\end{lstlisting}
+
+You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa using a read mapper and get the results in a single SAM formatted file. The mapping should be performed in single-end mode. The *.scarpa.fq files are not needed after the SAM file is created, you may delete them subsequently to free disk space.
+
+\subsection{scarpa\_parser}
+
+Before running Scarpa, you need to process the mappings using the script scarpa\_parser using the following command:
+
+\begin{lstlisting}
+cat <sam file> | scarpa_parser [-e <maximum # of mismatches>] > <map file>
+\end{lstlisting}
+
+The argument -e is optional and by default set to 0. ``map file'' will be needed in the next step. Note that this script takes the SAM file from standard input, so if you are using a mapper that writes the SAM file to standard output you can pipe its output directly to scarpa\_parser. This can save significant time and disk space for large datasets.
+
+\subsection{scarpa}
 
 \begin{lstlisting}
 
@@ -360,7 +440,7 @@ ADVANCED OPTIONS
 
 \end{lstlisting}
 
-\section{Memory Usage}
+\section{Performance}
 
 Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirements for \texttt{preprocr}, \texttt{correctr}, \texttt{overlappr} and \texttt{consensr} are:
 
@@ -371,10 +451,11 @@ M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
 2M + 37n + C
 \end{eqnarray}
 
-where $C$ is a small (usually less than 1GB) overhead. Note that, the above should still be taken
-as lower bounds: the actual memory used by these programs might vary slightly in different environments.
+where $C$ is a small (usually less than 1GB) overhead. Note that, the above should still be taken as lower bounds: the actual memory used by these programs might vary in different environments.
 
 The memory requirements of \texttt{hapsemblr} and \texttt{scarpa} are harder to estimate since they depend on factors that can not be immediately measured using the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
+
+Though the memory imprint of \texttt{scarpa} is not very high, its running time partially depends on the quality of the contigs and reads.
 
 \section{Frequently Asked Questions}
 \label{faq}
