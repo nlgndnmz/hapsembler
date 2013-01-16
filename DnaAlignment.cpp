@@ -35,16 +35,16 @@ void usage(const char * progName, const char * badArg, const char * msg)
 {
 	cerr << endl << badArg << " " << msg << endl;
 #ifdef USEOPENMP
-	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ") w/ OMP" << endl << endl;
+	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ") (OpenMP support: yes) " << endl << endl;
 #else
-	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ")" << endl << endl;
+	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ") (OpenMP support: no) " << endl << endl;
 #endif
 	
 #ifdef PREPROCR
 	cerr << "    " << progName << " -p <platform> -f <file> -o <file> " << endl << "\n\
 OPTIONS \n\
     --platform|-p [illumina|fourfivefour] \n\
-        Defines the type of the platform the reads are produced from (required) \n\
+        Define the type of the platform the reads are produced from (required) \n\
 \n\
     --fastq|-f fastq_filename \n\
         Fastq formatted input file (required) \n\
@@ -81,10 +81,10 @@ OPTIONS \n\
         Output filename for corrected reads (required) \n\
 \n\
     --genome|-g V \n\
-        Estimated genome size in kilo base pairs. (required) \n\
+        Estimated genome size in KILO base pairs. (required) \n\
 \n\
     --nthreads|-t K \n\
-        Use K number of threads (ignored if program is not compiled with OMP_OK=1) \n\
+        Use K number of threads (ignored if program is compiled without OpenMP) \n\
 \n\
     --onestrand|-a [yes|no] \n\
         If set to yes, the reads are treated as single stranded. Default value is no. \n\
@@ -110,10 +110,10 @@ OPTIONS \n\
         Prefix for output files \n\
 \n\
     --genome|-g V \n\
-        Estimated genome size in kilo base pairs. (required) \n\
+        Estimated genome size in KILO base pairs. (required) \n\
 \n\
     --nthreads|-t K \n\
-        Use K number of threads (ignored if program is not compiled with OMP_OK=1) \n\
+        Use K number of threads (ignored if program is compiled without OpenMP) \n\
 \n\
     --onestrand|-a [yes|no] \n\
         If set to yes, the reads are treated as single stranded. Default value is no. \n\
@@ -263,7 +263,7 @@ int main(int argc, char **argv)
 	}
 
 	// make sure the parameters are somewhat sane
-	if(phred_offset < 33 || phred_offset > 80) usage(argv[0], " ", "PHRED_OFFSET should be between 33 and 80");
+	if(phred_offset < 33 || phred_offset > 80) usage(argv[0], " ", "Phred offset should be between 33 and 80");
 	if(epsilon < 0.01) epsilon = 0.01;
 	if(epsilon > 0.09) epsilon = 0.09;
 	if(nthreads < 1) nthreads = 1;
@@ -271,6 +271,7 @@ int main(int argc, char **argv)
 	if(nthreads > thread_limit) nthreads = thread_limit;
 	if(trim_threshold > 0.5) trim_threshold = 0.5;
 	if(revcomp < 0 || revcomp > 3) revcomp = 0;
+	if(genome > 3200000) usage(argv[0], " ", "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs.")
 
 	if(UINT_MAX <= 2147483647)
 		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");
@@ -283,6 +284,11 @@ int main(int argc, char **argv)
 
 	clock_t start, stop;
 	start = clock();
+	
+#ifndef USEOPENMP
+	if(nthreads > 1)
+		cerr << "You have requested multiple threads but the program is compiled without OpenMP support. Please recompile to enable multi-threading." << endl << endl;
+#endif
 
 	cerr << endl << argv[0] << " started at " << asctime(timeinfo) << endl << "Arguments given: ";
 	for(int i=1; i<argc; i++)
@@ -301,15 +307,15 @@ int main(int argc, char **argv)
 		seqs->set_SmithWaterman(max_read_size, 1+2*kmer_size, match_score, mismatch_score,
 			indel_score, gap_quality, epsilon, max_quality, num_nucleotides, max_steps, prior);
 
-		genome *= 1000;
-
 #ifdef PREPROCR
 		seqs->trim_reads(fastqFilename, pairedFilename, outputFilename, kmer_size, trim_threshold, revcomp);
 #endif
 
+		genome *= 1000;		// convert it to base pairs
+
 #ifdef CORRECTR
 		seqs->isCorrectr = true;
-		if(genome < 1000) usage(argv[0], " ", "Error: please set genome size to a positive value!");
+		if(genome < 1000) usage(argv[0], " ", "Error: Genome size can not be less than 1kbp!");
 		int coverage = seqs->read_reads(fastqFilename, genome, true, true);
 
 		nthreads = seqs->overlap_reads(nthreads, outputFilename, onestrand, coverage);
@@ -318,7 +324,7 @@ int main(int argc, char **argv)
 
 #ifdef OVERLAPPR
 		seqs->isOverlappr = true;
-		if(genome < 1000) usage(argv[0], " ", "Error: please set genome size to a positive value!");
+		if(genome < 1000) usage(argv[0], " ", "Error: Genome size can not be less than 1kbp!");
 		int coverage = seqs->read_reads(fastqFilename, genome, false, false, outputFilename);
 
 		nthreads = seqs->overlap_reads(nthreads, outputFilename, onestrand, coverage);

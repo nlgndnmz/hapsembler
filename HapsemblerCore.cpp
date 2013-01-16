@@ -52,7 +52,7 @@ OPTIONS \n\
         Output filename for contigs (required) \n\
 \n\
     --genome|-g genome_size \n\
-        Estimated genome size in kilo base pairs (required) \n\
+        Estimated genome size in KILO base pairs (required) \n\
 \n\
     --library|-l library_filename \n\
         File containing information about libraries. If unset, all reads are taken to be single production. \n\

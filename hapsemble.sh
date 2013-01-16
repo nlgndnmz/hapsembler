@@ -23,7 +23,7 @@
 print_help()
 {
 	echo " "
-	echo "Usage: $0 -p <platform> -f <input file> -g <genome size>
+	echo "Usage: $0 -p <platform> -f <input file> -g <genome size>"
 	echo " "
 	echo "--platform|-p [illumina|fourfivefour]"
 	echo "    Defines the type of the platform the reads are produced from (required)"
@@ -32,7 +32,7 @@ print_help()
 	echo "    Fastq formatted input file (required)"
 	echo " "
 	echo "--genome|-g genome_size"
-	echo "    Estimated genome size in kbp. (required)"
+	echo "    Estimated genome size in KILO base pairs. (required)"
 	echo " "
 	echo "--output|-o output_filename"
 	echo "    Output filename. Default is 'output.fasta'."
@@ -41,7 +41,7 @@ print_help()
 	echo "    File containing information about libraries. If unset, all reads are taken to be single production."
 	echo " "
 	echo "--nthreads|-t N (integer)"
-	echo "    Use N number of threads (ignored if program is not compiled with OMP_OK=1)"
+	echo "    Use N number of threads (ignored if compiled without OpenMP)"
 	echo " "
 	echo "--onestrand|-a [yes|no]"
 	echo "    If set to yes, the reads are treated as single stranded. Default is no."
@@ -55,7 +55,7 @@ print_help()
 	echo "--phred|-d N (integer)"
 	echo "    Set the phred offset for the quality values to N. Default values for illumina and fourfivefour are 64 and 33 respectively."
 	echo " "
-	echo "--min-size|-m N (integer)
+	echo "--min-size|-m N (integer)"
 	echo "    Set the minimum size of a contig to be reported to N (in bp). Default value is 200."
 	echo " "
 	echo "--stage-start|-y [--stage-end|-z] N (integer)"
@@ -64,12 +64,15 @@ print_help()
 	echo "        2 -> hapsemblr"
 	echo "        3 -> consensr"
 	echo " "
-	echo "    See the README file for more information."
-	echo " "
 	exit
 }
 
 if [ $# -eq 0 ]
+then
+	print_help
+fi
+
+if [ $1 = "--help" ]
 then
 	print_help
 fi

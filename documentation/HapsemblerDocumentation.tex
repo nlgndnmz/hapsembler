@@ -25,7 +25,7 @@
 % change the following to the package version
 \newcommand{\hapversion}{2.0}
 
-\title{Hapsembler (version \hapversion{}) \\ ( + Encore \& Scarpa) \\ Manual }
+\title{Hapsembler version \hapversion{} \\ ( + Encore \& Scarpa) \\ Manual }
 
 \author{Nilgun Donmez \\
 \emph{Department of Computer Science} \\
@@ -170,7 +170,7 @@ SYNOPSIS
 
 OPTIONS 
     --platform|-p [illumina|fourfivefour] 
-        Defines the type of the platform the reads are produced from (required) 
+        Define the type of the platform the reads are produced from (required) 
 
     --fastq|-f fastq_filename 
         Fastq formatted input file (required) 
@@ -195,7 +195,7 @@ OPTIONS
 \subsection{encore}
 \label{ercor}
 
-Once you prepare your reads, you should run the error correction program \texttt{encore}. You can use this program even if you do not intend to perform \emph{de novo} assembly on your reads, for instance as preprocessing for SNP detection, reference-guided assembly, etc.
+Once you prepare your reads, you can run the read error correction program \texttt{encore}. You can use this program even if you do not intend to perform \emph{de novo} assembly on your reads, for instance as preprocessing for SNP detection, reference-guided assembly, etc.
 
 \begin{lstlisting}
 
@@ -213,10 +213,10 @@ OPTIONS
         Output filename for corrected reads (required) 
 
     --genome|-g V 
-        Estimated genome size in kilo base pairs. (required) 
+        Estimated genome size in KILO base pairs. (required) 
 
     --nthreads|-t K 
-        Use K number of threads (ignored if program is not compiled with OMP_OK=1) 
+        Use K number of threads (ignored if program is compiled without OpenMP)
 
     --onestrand|-a [yes|no] 
         If set to yes, the reads are treated as single stranded. Default value is no. 
@@ -237,7 +237,9 @@ Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and
 2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
 \end{equation}
 
-where $C$ is a small (usually less than 1GB) overhead. The memory requirement for \texttt{preprocr} is constant. Note that the equation above is a lower bound on the memory and the actual requirement may vary slightly with the environment. The speed-up gained from multiple-threads is almost linear with the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading (max 32 threads) if you have sufficient memory available.
+where $C$ is a small (usually less than 1GB) overhead. The memory requirement for \texttt{preprocr} is constant and its running time is linear.
+
+We note that the equation above is a lower bound on the memory and the actual requirement may vary slightly with the environment. The speed-up gained from multiple-threads is almost linear with the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading (max 32 threads) if you have sufficient memory available. 
 
 \section{Genome Assembly}
 
@@ -263,10 +265,10 @@ OPTIONS
         Prefix for output files 
 
     --genome|-g V 
-        Estimated genome size in kilo base pairs. (required) 
+        Estimated genome size in KILO base pairs. (required) 
 
     --nthreads|-t K 
-        Use K number of threads (ignored if program is not compiled with OMP_OK=1) 
+        Use K number of threads (ignored if program is compiled without OpenMP)
 
     --onestrand|-a [yes|no] 
         If set to yes, the reads are treated as single stranded. Default value is no. 
@@ -293,7 +295,7 @@ OPTIONS
         Output filename for contigs (required) 
 
     --genome|-g genome_size 
-        Estimated genome size in kilo base pairs (required) 
+        Estimated genome size in KILO base pairs (required) 
 
     --library|-l library_filename 
         File containing information about libraries. If unset, all reads are taken to be single production. 
@@ -340,11 +342,56 @@ OPTIONS
 \subsection{hapsemble}
 \label{hapscript}
 
-\texttt{hapsemble} is a wrapper script that executes the programs in the core Hapsembler pipeline in a logical order. Note that this script will not work unless the full path of the Hapsembler bin directory is added to your system path. The synopsis of the script and the basic options are described below.
+\texttt{hapsemble} is a wrapper script that executes the programs in the core Hapsembler pipeline in a logical order. Note that this script will not work unless the full path of the Hapsembler bin directory is added to your system path. The synopsis of the script and the options are described below.
 
+\begin{lstlisting}
 
+SYNOPSIS
+    ./hapsemble -p <platform> -f <input file> -g <genome size>
+ 
+OPTIONS
+    --platform|-p [illumina|fourfivefour]
+        Defines the type of the platform the reads are produced from (required)
+     
+    --fastq|-f fastq_filename
+        Fastq formatted input file (required)
+     
+    --genome|-g genome_size
+        Estimated genome size in KILO base pairs. (required)
+     
+    --output|-o output_filename
+        Output filename. Default is 'output.fasta'.
+     
+    --library|-l library_filename
+        File containing information about libraries. If unset, all reads are taken to be single production.
+     
+    --nthreads|-t N (integer)
+        Use N number of threads (ignored if compiled without OpenMP)
+     
+    --onestrand|-a [yes|no]
+        If set to yes, the reads are treated as single stranded. Default is no.
+     
+    --calibrate|-b [yes|no]
+        If set to yes, re-calculates the mean and standard deviation of each library. The default is yes.
+     
+    --epsilon|-e E (real number)
+        Set the expected (mismatches+indels) rate. E must be a real number between 0.01 and 0.09. Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively.
+     
+    --phred|-d N (integer)
+        Set the phred offset for the quality values to N. Default values for illumina and fourfivefour are 64 and 33 respectively.
+     
+    --min-size|-m N (integer)
+        Set the minimum size of a contig to be reported to N (in bp). Default value is 200.
+     
+    --stage-start|-y [--stage-end|-z] N (integer)
+        Set the starting/ending stage to N, where N is an integer between 1 and 3. Defaults are 1 and 3 respectively. Stages are as follows:
+            1 -> overlappr
+            2 -> hapsemblr
+            3 -> consensr
 
-You can use the stage option to re-evaluate one or more stages due to previous failures or due to option changes. For instance, if you would like to re-run \texttt{hapsemblr} but this time allow 4 standard deviations when connecting mate pairs, you can change the corresponding option and set the stage-start to 4 and only the last two steps of the pipeline will be executed. Aside from the common options described above, this script can also take a number of advanced options to further control the assembly process. These options are described in the next section.
+\end{lstlisting}
+
+You can use the \texttt{stage-start} and \texttt{stage-end} options to re-evaluate one or more stages due to previous failures or due to option changes. For instance, if you would like to re-run \texttt{hapsemblr} but this time without library calibration, you can change the corresponding option and set the \texttt{stage-start} to 2 and only the last two steps of the pipeline will be executed. 
 
 \subsection{Performance}
 
