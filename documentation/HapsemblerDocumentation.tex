@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{color}
 \usepackage{graphicx}
+\usepackage{fullpage}
 \usepackage{url}
 \usepackage{amssymb}
 
@@ -370,7 +371,7 @@ As a first step, the reads and contigs have to be prepared using the perl script
 \begin{lstlisting}
 
 SYNOPSIS
-	scarpa_process -c <contigs> -f <reads> -i <insert size>
+    scarpa_process -c <contigs> -f <reads> -i <insert size>
 
 OPTIONS
     <contigs> -> is a fasta file containing the contigs.
@@ -379,10 +380,13 @@ OPTIONS
 
 \end{lstlisting}
 
-Above, the orientation of the reads are expected to be forward-reverse. If you have more than one library, you can use the -f and -i options repeatedly. For example, if you have two libraries in files lib1.fastq and lib2.fastq with insert sizes 300bp and 600bp, respectively:
+Above, the orientation of the reads are expected to be forward-reverse. If you have more than one library, you can use the -f and -i options repeatedly. For example, if you have two libraries in files lib1.fq and lib2.fq with insert sizes 300bp and 600bp, respectively:
 
 \begin{lstlisting}
-scarpa_process -c contigs.fasta -f lib1.fastq -i 300 -f lib2.fastq -i 600
+
+scarpa_process -c contigs.fasta -f lib1.fq -i 300 -f lib2.fq -i 600
+
+
 \end{lstlisting}
 
 This command will produce the following files:
@@ -390,8 +394,8 @@ This command will produce the following files:
 \begin{lstlisting}
 contigs.fasta.scarpa.fa
 contigs.fasta.scarpa.info
-lib1.fastq.scarpa.fq
-lib2.fastq.scarpa.fq
+lib1.fq.scarpa.fq
+lib2.fq.scarpa.fq
 \end{lstlisting}
 
 You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa using a read mapper and get the results in a single SAM formatted file. The mapping should be performed in single-end mode. The *.scarpa.fq files are not needed after the SAM file is created, you may delete them subsequently to free disk space.
@@ -401,17 +405,29 @@ You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa using a read m
 Before running Scarpa, you need to process the mappings using the script scarpa\_parser using the following command:
 
 \begin{lstlisting}
-cat <sam file> | scarpa_parser [-e <maximum # of mismatches>] > <map file>
+
+cat <sam> | scarpa_parser [-e <max # of mismatches>] > <map>
+
 \end{lstlisting}
 
-The argument -e is optional and by default set to 0. ``map file'' will be needed in the next step. Note that this script takes the SAM file from standard input, so if you are using a mapper that writes the SAM file to standard output you can pipe its output directly to scarpa\_parser. This can save significant time and disk space for large datasets.
+The argument -e is optional and by default set to 0. ``map'' file will be needed in the next step. Note that this script takes the SAM file from standard input, so if you are using a mapper that writes the SAM file to standard output you can pipe its output directly to scarpa\_parser. This can save significant time and disk space for large datasets.
 
 \subsection{scarpa}
+
+In this last step, simply run the following command:
+
+\begin{lstlisting}
+
+scarpa -c <contigs>.scarpa.fa -i <map file> -l <contigs>.scarpa.info -o <output>
+
+\end{lstlisting}
+
+Above <output> is the name for the output file and it will contain the scaffolds in fasta format. The other arguments are the files you obtained by running \texttt{scarpa\_process} and \texttt{scarpa\_parser}. In addition to the mandatory arguments above, the \texttt{scarpa} executable takes several advanced options as listed below:
 
 \begin{lstlisting}
 
 SYNOPSIS
-    ./scarpa -c <file> -l <file> -i <file> -o <file> 
+    ./scarpa -c <contigs> -l <library info> -i <mappings> -o <output> 
 
 OPTIONS 
     --contigs|-c contigs_filename 
@@ -430,7 +446,7 @@ ADVANCED OPTIONS
     --calibrate|-b [yes|no] 
         If set to yes, re-calculates the mean and standard deviation of each library. The default is yes. 
     --min_support N 
-        Sets the minimum number of mate links to connect two contigs to N. Default value is 2. 
+        Sets the minimum number of paired read links to connect two contigs to N. Default value is 2. 
     --max_removal N 
         Sets the maximum number of contigs that can be removed during the orientation step to N. Default value is 6. 
     --max_overlap N 
@@ -440,22 +456,11 @@ ADVANCED OPTIONS
 
 \end{lstlisting}
 
-\section{Performance}
+\subsection{Performance}
 
-Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirements for \texttt{preprocr}, \texttt{correctr}, \texttt{overlappr} and \texttt{consensr} are:
+The perl scripts \texttt{scarpa\_process} and \texttt{scarpa\_parser} use constant memory and run in linear time. The memory requirement of \texttt{scarpa} is difficult to estimate from the raw input, though it grows roughly linearly with the number of contigs. The running time will largely  depend on the quality of the reads and the contigs, as well as the complexity of the genome. If it is taking more time than tolerable for your project, you may try increasing the \texttt{min\_support} value.
 
-\begin{eqnarray}
-C \\
-2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
-M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
-2M + 37n + C
-\end{eqnarray}
-
-where $C$ is a small (usually less than 1GB) overhead. Note that, the above should still be taken as lower bounds: the actual memory used by these programs might vary in different environments.
-
-The memory requirements of \texttt{hapsemblr} and \texttt{scarpa} are harder to estimate since they depend on factors that can not be immediately measured using the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
-
-Though the memory imprint of \texttt{scarpa} is not very high, its running time partially depends on the quality of the contigs and reads.
+If you are running \texttt{scarpa} with contigs generated by a third-party assembler, please be aware that some NGS assemblers tend to report a large number of very short contigs ($<$75bp). Such contigs can not be reliably scaffolded, yet they increase the running time significantly. You can discard small contigs by setting the \texttt{--min\_contig} option as described above, however, we highly recommend removing these contigs before scaffolding. This will not only speed up the mapping process but also decrease the number of multi-mapped reads. 
 
 \section{Frequently Asked Questions}
 \label{faq}
