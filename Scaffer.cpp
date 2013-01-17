@@ -89,7 +89,7 @@ void Scaffer::read_info(char * filename, int minSupport)
 
 	ifstream fh2;
 	open_n_check(fh2, filename);
-	while(fh2 >> st >> end >> insert >> dev)
+	while(fh2 >> st >> end >> insert >> dev >> ori)
 	{
 		Libs[++counter].insertSize = insert;
 		Libs[counter].deviation = (short int) (dev);

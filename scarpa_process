@@ -20,7 +20,7 @@ sub usage
 	exit(0);
 }
 
-if($#ARGV < 7)
+if($#ARGV < 5)
 {	&usage; }
 
 my $contigfile;

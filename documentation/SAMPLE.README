@@ -4,37 +4,46 @@ Last update: January 11, 2012
 
 This directory should contain:
 
-    sample_illu.fastq -> A fastq formatted file containing simulated
-        paired-end Illumina reads. This dataset consists of a small
+    sample.fq -> A fastq formatted file containing simulated paired-end
+        Illumina reads of ~40x coverage. This dataset consists of a small
         subset of the reads taken from Assemblathon1 (visit
         http://assemblathon.org for more information).
 
-    sample_illu.info -> This is an example of library information file as
+    sample.info -> This is an example of library information file as
         required by Hapsembler. The reads belong to a single library w/
         insert size of 300bp and standard deviation of 30bp.
+		
+	sample2.fq -> A fastq file representing a second library with ~20x
+		coverage and it contains simulated paired reads with an
+		insert size and deviation of 800bp and 80bp respectively.
+		This file is used to test Scarpa.
 
     SAMPLE.README -> This file.
 
-
 How to run the demo:
 
-    1) First, install Hapsembler following the instructions given in
+	** Note that you will need to have Bowtie (version 0.12.7 or later)
+	installed in order to run this demo. 
+
+    1) Build Hapsembler executables following the instructions given in
     "hapsembler-X.X/INSTALL".
 
     2) Add the full path of "hapsembler-X.X/bin" to your system path.
 
-    3) Change your directory to "hapsembler-X.X/sample" and type:
+    3) Change your directory to "hapsembler-X.X/sample". 
+	
+	4) Change the value of BOWTIEDIR in ./hapDEMO.sh to the directory 
+	containing Bowtie executables in your environment.
+	
+	5) Change the value of NTHREADS in ./hapDEMO.sh to the number of CPUs
+	available.
+	
+	6) Run ./hapDEMO.sh
 
-encore -p illumina -f sample_illu.fastq -g 500 -o corr_sample_illu.fastq
-
-	4) The command above will perform read correction. Then type:
-
-hapsemble -p illumina -f corr_sample_illu.fastq -l sample_illu.info -g 500
-
-    5) If all the tools run successfully, the file "output.fasta" should 
-    contain 21 contigs totalling around 0.5m base pairs.
+    7) If all the tools run successfully, the file "scaffolds.fasta" should 
+    containing 3 scaffolds totalling around 0.5m base pairs.
 
 WARNING: You will need a machine with 7GB or more memory to run this demo.
-Typical running time of the demo is 8-10 minutes. Actual time may vary
-depending on your environment.
+Typical running time of the demo is 15-20 minutes. Actual time may vary
+depending on your environment and the number of CPUs available.
 
