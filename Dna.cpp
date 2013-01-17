@@ -800,7 +800,7 @@ void DNA::write_contigs(char * inputFilename, int minContigSize, char * outputFi
     bool * conts = scan_contigs(inputFilename, minContigSize);
 
     string s(outputFilename);		// this is an auxiliary file, that can be used for analysis or as input to a scaffolder
-	s += ".map";
+	s += ".tmp";
 	char * fname = new char[s.size()+1];
 	strcpy(fname, s.c_str());
 	ofstream mapFile;

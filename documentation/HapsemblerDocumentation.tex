@@ -413,7 +413,7 @@ Below we give information on how to use Scarpa. Since Scarpa is designed as a st
 
 \subsection{scarpa\_process}
 
-As a first step, the reads and contigs have to be prepared using the perl script scarpa\_process:
+As a first step, the reads and contigs have to be prepared using the perl script \texttt{scarpa\_process}:
 
 \begin{lstlisting}
 
@@ -449,7 +449,7 @@ You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa using a read m
 
 \subsection{scarpa\_parser}
 
-Before running Scarpa, you need to process the mappings using the script scarpa\_parser using the following command:
+Before running Scarpa, you need to process the mappings using the script \texttt{scarpa\_parser} using the following command:
 
 \begin{lstlisting}
 
@@ -469,12 +469,12 @@ scarpa -c <contigs>.scarpa.fa -i <map file> -l <contigs>.scarpa.info -o <output>
 
 \end{lstlisting}
 
-Above <output> is the name for the output file and it will contain the scaffolds in fasta format. The other arguments are the files you obtained by running \texttt{scarpa\_process} and \texttt{scarpa\_parser}. In addition to the mandatory arguments above, the \texttt{scarpa} executable takes several advanced options as listed below:
+Above ``output'' is the name for the output file and it will contain the scaffolds in fasta format. The other arguments are the files you obtained by running \texttt{scarpa\_process} and \texttt{scarpa\_parser}. In addition to the mandatory arguments above, the \texttt{scarpa} executable takes several advanced options as listed below:
 
 \begin{lstlisting}
 
 SYNOPSIS
-    ./scarpa -c <contigs> -l <library info> -i <mappings> -o <output> 
+    ./scarpa -c <contigs> -l <library> -i <mappings> -o <output> 
 
 OPTIONS 
     --contigs|-c contigs_filename 

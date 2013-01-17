@@ -22,6 +22,7 @@
 
 #include <cmath>
 #include <fstream>
+#include <cstring>
 #include <iostream>
 
 #include "OvlGraphTempl.h"
@@ -573,7 +574,7 @@ void OvlGraph::mark_single_nodes(double arrival, double cutoff)
 }
 
 // adjust the insert size statistics
-void OvlGraph::calibrate_libraries()
+void OvlGraph::calibrate_libraries(char * filename)
 {
 	long long int * libMean = new long long int[numLibs+1];
 	int * libSupport = new int[numLibs+1];
@@ -668,18 +669,22 @@ void OvlGraph::calibrate_libraries()
 		libMean[k] = int(libMean[k]/(double)libSupport[k]);
 		bootstrap_library(libMean, libSupport, histogram, histSize, Libs, k, true);
 	}
-
+	
+	string s(filename);		
+	s += ".hist";
+	char * fname = new char[s.size()+1];
+	strcpy(fname, s.c_str());
 	ofstream fh;
-	open_n_check(fh, "histogram.txt");
-
+	open_n_check(fh, fname);
+	
 	for(int d=0; d<histSize; d++)
 	{
 		for(int k=1; k<=numLibs; k++)
 			fh << histogram[k][d] << " ";
 		fh << "\n";
 	}
-
 	check_n_close(fh);
+	delete [] fname;
 
 	for(int k=1; k<=numLibs; k++)
 		delete [] histogram[k];

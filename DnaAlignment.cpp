@@ -271,7 +271,7 @@ int main(int argc, char **argv)
 	if(nthreads > thread_limit) nthreads = thread_limit;
 	if(trim_threshold > 0.5) trim_threshold = 0.5;
 	if(revcomp < 0 || revcomp > 3) revcomp = 0;
-	if(genome > 3200000) usage(argv[0], " ", "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs.")
+	if(genome > 3200000) usage(argv[0], " ", "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs.");
 
 	if(UINT_MAX <= 2147483647)
 		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");

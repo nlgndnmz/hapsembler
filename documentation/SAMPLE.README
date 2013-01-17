@@ -25,10 +25,14 @@ How to run the demo:
 
     3) Change your directory to "hapsembler-X.X/sample" and type:
 
-    hapsemble -p illumina -g 40 -f sample_illu.fastq -l sample_illu.info
+encore -p illumina -f sample_illu.fastq -g 500 -o corr_sample_illu.fastq
 
-    4) If the demo runs successfully, the file "output.fasta" should 
-    contain 44 contigs totalling around 0.54m base pairs.
+	4) The command above will perform read correction. Then type:
+
+hapsemble -p illumina -f corr_sample_illu.fastq -l sample_illu.info -g 500
+
+    5) If all the tools run successfully, the file "output.fasta" should 
+    contain 21 contigs totalling around 0.5m base pairs.
 
 WARNING: You will need a machine with 7GB or more memory to run this demo.
 Typical running time of the demo is 8-10 minutes. Actual time may vary

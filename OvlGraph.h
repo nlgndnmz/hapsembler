@@ -65,8 +65,8 @@ class OvlGraph
 		void read_chain_collapse();
 		void mate_chain_collapse();
 
-		int plot_readovl_distribution(char * fn, int t);
-		int plot_mateovl_distribution(char * fn, int t);
+		int plot_readovl_distribution(char *, int);
+		int plot_mateovl_distribution(char *, int);
 
 		int check_read_graph();
 		int check_mate_graph();
@@ -95,7 +95,7 @@ class OvlGraph
 		void remove_short_read_overlaps(int);
 		void mark_single_nodes(double, double);
 
-		void calibrate_libraries();
+		void calibrate_libraries(char *);
 
 		Library * Libs;
 

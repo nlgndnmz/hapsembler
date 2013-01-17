@@ -3,7 +3,7 @@
 ####################################
 # Author: Nilgun Donmez
 # Date: September 4, 2012
-# Part of SCARPA package
+# Part of Scarpa package
 ####################################
 
 use strict;
@@ -11,9 +11,9 @@ use Getopt::Long;
 
 sub usage
 {
-	print STDERR "\nusage: scarpa_parser --errors|-e <no. mismatches> \n\n";
-	print STDERR "Part of SCARPA package. Takes a .SAM file from standard input ";
-	print STDERR "and converts it to a .map file to be used by SCARPA. ";
+	print STDERR "\nusage: scarpa_parser --errors|-e <# of mismatches> \n\n";
+	print STDERR "Part of Scarpa package. Takes a .SAM file from standard input ";
+	print STDERR "and converts it to a .map file to be used by Scarpa. ";
 	print STDERR "--errors option specify the maximum allowed mismatches or indels ";
 	print STDERR "in the mapping. Default value is 0. \n\n";
 	exit(0);

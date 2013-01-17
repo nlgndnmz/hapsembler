@@ -302,7 +302,7 @@ int main(int argc, char **argv)
 		else
 		{
 			if(calibrate)
-				OG->calibrate_libraries();
+				OG->calibrate_libraries(contigFilename);
 
 			OG->build_pair_graph();
 
