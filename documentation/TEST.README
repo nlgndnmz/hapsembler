@@ -2,40 +2,36 @@
 
 Last update: December 7, 2012
 
-    This folder contains a toy dataset to test the executables and scripts
-included in the Scarpa package. You should see the following files under
-this directory:
+This directory should contain:
 
-TEST.README -> this file
-contigs.fasta  ->  A fasta formatted file containing 93 contigs
-reads.fastq  ->  A fastq formatted file containing 37500 read pairs with 300bp mean insert size
-intermediate -> A directory containing 3 intermediate files
+    sample.fq -> A fastq formatted file containing simulated paired-end
+        Illumina reads of ~40x coverage. The mean insert size is 300bp.
+		
+	sample2.fq -> A fastq file representing another library with ~20x
+		coverage. It contains simulated paired-end reads with an
+		insert size of 800bp.
 
-    The contigs were initially assembled using a different set of reads simulated
-from a 250k region of human chromosome 22 (NCBI build 36). To run Scarpa on this
-dataset, first execute the following command:
+    TEST.README -> This file.
 
-scarpa_process -c contigs.fasta -f reads.fastq -i 300
+How to run the demo:
 
-    This will create three files under the same folder:
+	** Note that you will need to have Bowtie (version 0.12.7 or later)
+	installed in order to test Scarpa using this demo.
 
-contigs.fasta.scarpa.fa
-contigs.fasta.scarpa.info
-reads.fastq.scarpa.fq
+    1) Build Scarpa following the instructions given in 
+	"scarpa-X.X/SCARPA.README".
 
-    Map the file reads.fastq.scarpa.fq to contigs.fasta.scarpa.fa with your favourite
-mapper in single-end mode. Make sure to tell the mapper to write the output in SAM
-format and report only uniquely mapped reads since Scarpa can not utilize ambiguous
-mappings. Assuming the output is named "reads.sam", run the following command:
+    2) Add the full path of "scarpa-X.X/bin" to your system path.
 
-cat reads.sam | scarpa_parser > reads.map
-
-(ALTERNATIVELY YOU CAN SKIP THESE PREPROCESSING AND MAPPING STEPS and use the files
-located under ./intermediate for the command below.)
-
-    Finally, execute Scarpa with the following options:
-
-scarpa -c contigs.fasta.scarpa.fa -l contigs.fasta.scarpa.info -i reads.map -o scaffolds.fasta
-
-    This should create a fasta file called "scaffolds.fasta" with 4 scaffolds
-totalling around 249.5kbp (the results may vary slightly depending on the mapper).
+    3) Change your directory to "scarpa-X.X/test". 
+	
+	4) Change the value of NTHREADS in ./scarpaDEMO to the number of CPUs
+	available.
+	
+	5) Change the value of BOWTIEDIR in ./scarpaDEMO to the directory 
+	containing Bowtie executables.
+	
+	6) Run ./scarpaDEMO
+	
+	If the demo is successful, you will find a file named "scaffolds.fa" 
+    containing 1 scaffold of roughly 0.5 million base pairs.

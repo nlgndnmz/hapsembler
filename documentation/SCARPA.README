@@ -91,7 +91,8 @@ and lib2.fastq with insert sizes 300 and 600bp, respectively:
 
 scarpa_process -c contigs.fasta -f lib1.fastq -i 300 -f lib2.fastq -i 600
 
-    This command will produce the following files:
+    Note that you should always provide the libraries in order of
+increasing insert size! This command will produce the following files:
 
 contigs.fasta.scarpa.fa
 contigs.fasta.scarpa.info

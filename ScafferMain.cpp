@@ -40,32 +40,28 @@ void usage(const char * progName, const char * badArg, const char * msg)
 	cerr << "    " << progName << " -c <file> -l <file> -i <file> -o <file> \n\n\
 OPTIONS \n\
     --contigs|-c contigs_filename \n\
-        Fasta formatted file containing the contigs \n\
+        Fasta formatted file containing the contigs (required) \n\
 \n\
     --library|-l libraries_filename \n\
-        File containing the paired read library information \n\
+        File containing the paired read library information (required) \n\
 \n\
     --mappings|-i mappings_filename \n\
-        File containing the read mappings \n\
+        File containing the read mappings (required) \n\
 \n\
     --output|-o output_filename \n\
-        Output file for scaffolds \n\
+        Output file for scaffolds (required) \n\
 \n\
-ADVANCE OPTIONS \n\
     --calibrate|-b [yes|no] \n\
-        If set to yes, re-calculates the mean and standard deviation of each library. The default is yes. \n\
-\
+        If set to yes, re-calculates the mean and standard deviation of each library. Default is yes. \n\
+\n\
     --min_support N \n\
         Sets the minimum number of mate links to connect two contigs to N. Default value is 2. \n\
-\
+\n\
     --max_removal N \n\
         Sets the maximum number of contigs that can be removed during the orientation step to N. Default value is 6. \n\
-\
-    --max_overlap N \n\
-        Sets the maximum overlap (in bp) between two adjacent contigs to N. \n\
-\
+\n\
     --min_contig N \n\
-        Sets the minimum contig size (in bp) to be used in scaffolding to N. \n\n";
+        Sets the minimum contig size (in bp) to be used in scaffolding to N. Default value is 100bp. \n\n";
 
     exit(0);
 }
@@ -78,7 +74,7 @@ int main(int argc, char **argv)
 	int minSupport = 2;
 	int maxOverlap = 50;
 	int maxDegree = 50;
-	int minContig = 50;
+	int minContig = 100;
 	int maxK = 6;
 
 	bool calibrate = true;
@@ -110,12 +106,6 @@ int main(int argc, char **argv)
 
 		else if(strcmp(argv[i], "--max_removal") == 0)
 			sscanf( argv[i+1], "%d", &maxK);
-
-		else if(strcmp(argv[i], "--max_overlap") == 0)
-			sscanf( argv[i+1], "%d", &maxOverlap);
-
-		else if(strcmp(argv[i], "--max_degree") == 0)
-			sscanf( argv[i+1], "%d", &maxDegree);
 
 		else if(strcmp(argv[i], "--min_contig") == 0)
 			sscanf( argv[i+1], "%d", &minContig);

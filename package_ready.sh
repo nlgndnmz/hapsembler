@@ -24,10 +24,12 @@ then
 	cp ./documentation/TEST.README ./$DNAME/test
 	cat ./documentation/SCARPA.README | awk '{sub(/scarpa-X.X/, "'$DNAME'"); print}' > ./$DNAME/SCARPA.README
 	cp ./documentation/LICENSE ./$DNAME
-	cp -r ./test ./$DNAME/
+	cp ./sample/*.fq ./$DNAME/test
+	cp scarpaDEMO ./$DNAME/test
 	chmod 644 ./$DNAME/*.h
 	chmod 644 ./$DNAME/*.cpp
 	chmod 644 ./$DNAME/test/*.*
+	chmod 744 ./$DNAME/test/scarpaDEMO
 	chmod 744 ./$DNAME/bin/scarpa_parser
 	chmod 744 ./$DNAME/bin/scarpa_process
 fi
@@ -56,8 +58,9 @@ then
 	cp lp_Hash.h lp_lib.h lp_matrix.h lp_mipbb.h lp_SOS.h lp_types.h lp_utils.h liblpsolve55.a liblpsolve55.so ./$DNAME
 	cp hapsemble ./$DNAME/bin/hapsemble
 	cp makefile ./$DNAME
-	cp ./sample/sample_illu.fastq ./$DNAME/sample/
-	cp ./sample/sample_illu.info ./$DNAME/sample/
+	cp ./sample/*.fq ./$DNAME/sample
+	cp ./sample/*.info ./$DNAME/sample
+	cp hapsemblerDEMO ./$DNAME/sample
 	cat ./documentation/SAMPLE.README | awk '{sub(/hapsembler-X.X/, "'$DNAME'"); print}' > ./$DNAME/sample/SAMPLE.README
 	cat ./documentation/README | awk '{sub(/hapsembler-X.X/, "'$DNAME'"); print}' > ./$DNAME/README
 	cp ./documentation/INSTALL ./$DNAME
@@ -69,6 +72,7 @@ then
 	chmod 644 ./$DNAME/*.cpp
 	chmod 644 ./$DNAME/doc/*.pdf
 	chmod 644 ./$DNAME/sample/*.*
+	chmod 744 ./$DNAME/sample/hapsemblerDEMO
 	chmod 744 ./$DNAME/bin/hapsemble
 	chmod 744 ./$DNAME/bin/scarpa_parser
 	chmod 744 ./$DNAME/bin/scarpa_process

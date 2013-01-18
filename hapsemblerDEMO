@@ -1,0 +1,22 @@
+#!/bin/bash
+
+NTHREADS=6
+BOWTIEDIR="/home/nild/bowtie-0.12.7"
+
+if [ $1 = "--assem" ]
+then
+	encore -p illumina -f sample.fq -g 500 -t $NTHREADS -o corr.fq
+	hapsemble -p illumina -f corr.fq -g 500 -t $NTHREADS -l sample.info --min-size 400 -o contigs.fa
+fi
+
+if [ $1 = "--full" ] 
+then
+	encore -p illumina -f sample.fq -g 500 -t $NTHREADS -o corr.fq
+	hapsemble -p illumina -f corr.fq -g 500 -t $NTHREADS -l sample.info --min-size 400 -o contigs.fa
+	scarpa_process -f corr.fq -i 300 -f sample2.fq -i 800 -c contigs.fa
+	$BOWTIEDIR/bowtie-build contigs.fa.scarpa.fa contigs
+	$BOWTIEDIR/bowtie -p $NTHREADS --sam --phred64-quals contigs corr.fq.scarpa.fq,sample2.fq.scarpa.fq contigs.sam
+	cat contigs.sam | scarpa_parser > contigs.map
+	scarpa -c contigs.fa.scarpa.fa -l contigs.fa.scarpa.info -i contigs.map -o scaffolds.fa
+fi	
+

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+NTHREADS=6
+BOWTIEDIR="/home/nild/bowtie-0.12.7"
+
+scarpa_process -f sample.fq -i 300 -f sample2.fq -i 800 -c contigs.fa
+$BOWTIEDIR/bowtie-build contigs.fa.scarpa.fa contigs
+$BOWTIEDIR/bowtie -p $NTHREADS --sam --phred64-quals contigs sample.fq.scarpa.fq,sample2.fq.scarpa.fq contigs.sam
+cat contigs.sam | scarpa_parser > contigs.map
+scarpa -c contigs.fa.scarpa.fa -l contigs.fa.scarpa.info -i contigs.map -o scaffolds.fa
+

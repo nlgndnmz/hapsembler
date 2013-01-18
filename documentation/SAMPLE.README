@@ -23,7 +23,7 @@ This directory should contain:
 How to run the demo:
 
 	** Note that you will need to have Bowtie (version 0.12.7 or later)
-	installed in order to run this demo. 
+	installed in order to test Scarpa using this demo.
 
     1) Build Hapsembler executables following the instructions given in
     "hapsembler-X.X/INSTALL".
@@ -32,18 +32,28 @@ How to run the demo:
 
     3) Change your directory to "hapsembler-X.X/sample". 
 	
-	4) Change the value of BOWTIEDIR in ./hapDEMO.sh to the directory 
-	containing Bowtie executables in your environment.
-	
-	5) Change the value of NTHREADS in ./hapDEMO.sh to the number of CPUs
+	4) Change the value of NTHREADS in ./hapsemblerDEMO to the number of CPUs
 	available.
 	
-	6) Run ./hapDEMO.sh
+	5) Change the value of BOWTIEDIR in ./hapsemblerDEMO to the directory 
+	containing Bowtie executables. If you don't have Bowtie installed see 
+	step 7 below.
+	
+	6) On the command prompt, type:
+	
+./hapsemblerDEMO --full 
 
-    7) If all the tools run successfully, the file "scaffolds.fasta" should 
-    containing 3 scaffolds totalling around 0.5m base pairs.
+	If the demo is successful, you will find a file named "scaffolds.fa" 
+    containing 1 scaffold of roughly 0.5 million base pairs.
+
+	7) To test only Encore and Hapsembler (excluding Scarpa), run:
+	
+./hapsemblerDEMO --assem
+	
+    If the demo is successful, then the file "contigs.fa" should contain
+	18 contigs totalling roughly 0.5 million base pairs.
 
 WARNING: You will need a machine with 7GB or more memory to run this demo.
-Typical running time of the demo is 15-20 minutes. Actual time may vary
+Typical running time of the demo is 10-15 minutes. Actual time may vary
 depending on your environment and the number of CPUs available.
 
