@@ -200,7 +200,7 @@ Once you prepare your reads, you can run the read error correction program \text
 \begin{lstlisting}
 
 SYNOPSIS
-    ./encore -p <platform> -f <file> -o <file> -g <genome> 
+   ./encore -p <platform> -f <file> -o <file> -g <genome> 
 
 OPTIONS 
     --platform|-p [illumina|fourfivefour] 
@@ -216,7 +216,7 @@ OPTIONS
         Estimated genome size in KILO base pairs. (required) 
 
     --nthreads|-t K 
-        Use K number of threads (ignored if program is compiled without OpenMP)
+        Use K number of threads (ignored if program is compiled without OpenMP) 
 
     --onestrand|-a [yes|no] 
         If set to yes, the reads are treated as single stranded. Default value is no. 
@@ -269,7 +269,7 @@ OPTIONS
         Estimated genome size in KILO base pairs. (required) 
 
     --nthreads|-t K 
-        Use K number of threads (ignored if program is compiled without OpenMP)
+        Use K number of threads (ignored if program is compiled without OpenMP) 
 
     --onestrand|-a [yes|no] 
         If set to yes, the reads are treated as single stranded. Default value is no. 
@@ -286,10 +286,10 @@ OPTIONS
 \begin{lstlisting}
 
 SYNOPSIS
-    hapsemblr -r <file> -c <file> -g <genome size>
+   hapsemblr -r <file> -c <file> -g <genome size>
 
 OPTIONS 
-    --prefix|-r prefix
+    --prefix|-r reads_filename 
         Prefix of the files produced by overlappr (required) 
 
     --contigs|-c contigs_filename 
@@ -316,7 +316,7 @@ OPTIONS
 \begin{lstlisting}
 
 SYNOPSIS
-    ./consensr -p <platform> -f <file> -c <file> -o <file> 
+   ./consensr -p <platform> -f <file> -c <file> -o <file> 
 
 OPTIONS 
     --platform|-p [illumina|fourfivefour] 
@@ -347,7 +347,7 @@ OPTIONS
 
 SYNOPSIS
     ./hapsemble -p <platform> -f <input file> -g <genome size>
- 
+
 OPTIONS
     --platform|-p [illumina|fourfivefour]
         Defines the type of the platform the reads are produced from (required)
@@ -387,7 +387,7 @@ OPTIONS
             1 -> overlappr
             2 -> hapsemblr
             3 -> consensr
-
+     
 \end{lstlisting}
 
 You can use the \texttt{stage-start} and \texttt{stage-end} options to re-evaluate one or more stages due to previous failures or due to option changes. For instance, if you would like to re-run \texttt{hapsemblr} but this time without library calibration, you can change the corresponding option and set the \texttt{stage-start} to 2 and only the last two steps of the pipeline will be executed. 
@@ -473,32 +473,32 @@ Above ``output'' is the name for the output file and it will contain the scaffol
 \begin{lstlisting}
 
 SYNOPSIS
-    ./scarpa -c <contigs> -l <library> -i <mappings> -o <output> 
+    ./scarpa -c <file> -l <file> -i <file> -o <file> 
 
 OPTIONS 
     --contigs|-c contigs_filename 
-        Fasta formatted file containing the contigs (required)
+        Fasta formatted file containing the contigs (required) 
 
     --library|-l libraries_filename 
-        File containing the paired read library information (required)
+        File containing the paired read library information (required) 
 
     --mappings|-i mappings_filename 
-        File containing the read mappings (required)
+        File containing the read mappings (required) 
 
     --output|-o output_filename 
-        Output file for scaffolds (required)
+        Output file for scaffolds (required) 
 
     --calibrate|-b [yes|no] 
         If set to yes, re-calculates the mean and standard deviation of each library. Default is yes. 
 
     --min_support N 
-        Sets the minimum number of paired read links to connect two contigs to N. Default value is 2. 
+        Sets the minimum number of mate links to connect two contigs to N. Default value is 2. 
 
     --max_removal N 
         Sets the maximum number of contigs that can be removed during the orientation step to N. Default value is 6. 
 
     --min_contig N 
-        Sets the minimum contig size (in bp) to be used in scaffolding to N. Default value is 200bp.
+        Sets the minimum contig size (in bp) to be used in scaffolding to N. Default value is 100bp. 
 
 \end{lstlisting}
 
