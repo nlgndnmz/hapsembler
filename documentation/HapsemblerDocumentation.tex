@@ -23,7 +23,7 @@
 }
 
 % change the following to the package version
-\newcommand{\hapversion}{2.0}
+\newcommand{\hapversion}{2.1}
 
 \title{Hapsembler version \hapversion{} \\ ( + Encore \& Scarpa) \\ Manual }
 
@@ -56,7 +56,7 @@ If you are only interested in scaffolding or error correction, Scarpa and the re
 To install Hapsembler download the package available at \url{http://compbio.cs.toronto.edu/hapsembler} and run:
 
 \begin{verbatim}
-tar -xzvf hapsembler-2.0.tar.gz
+tar -xzvf hapsembler-2.1.tar.gz
 \end{verbatim}
 
 Once the files are extracted, change your directory to hapsembler-\hapversion{} and type:
@@ -148,13 +148,14 @@ If your reads are in an orientation different from above, you have to reverse co
 
 \subsection{A note about Illumina mate-pairs}
 
-According to recent studies REF, mate-pair production reads may have a high percentage of chimeric reads. For this reason, we do not recommend using mate-pairs during the contig assembly stage. Instead, we suggest that these reads are included during the scaffolding phase as described in section \ref{scaff}. 
+According to some recent studies, mate-pair production reads may have a high percentage of chimeric reads. For this reason, we do not recommend using mate-pairs during the contig assembly stage. Instead, we suggest that these reads are included during the scaffolding phase as described in section \ref{scaff}. 
 
 \section{Hapsembler Pipeline}
 
 The Hapsembler pipeline is distributed among several executables under 3 main stages: 1) error correction 2) genome assembly and 3) scaffolding. The following sections describe each stage in detail and how to use the individual tools. If you forget the options available to any program in the Hapsembler package, simply run it with option "--help" and a help message will be displayed.
 
 \section{Error Correction}
+\label{ercor}
 
 This stage is performed to boost the quality of your sequencing reads by quality trimming and/or correction of sequencing errors. If you have reasons to believe you have high quality reads (e.g. simulated reads) you may skip this stage and proceed with assembly (see section \ref{assem}).
 
@@ -193,7 +194,6 @@ OPTIONS
 \end{lstlisting}
 
 \subsection{encore}
-\label{ercor}
 
 Once you prepare your reads, you can run the read error correction program \texttt{encore}. You can use this program even if you do not intend to perform \emph{de novo} assembly on your reads, for instance as preprocessing for SNP detection, reference-guided assembly, etc.
 
@@ -231,7 +231,7 @@ OPTIONS
 
 \subsection{Performance}
 
-Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirement for \texttt{encore} is:
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 268mbp, and $k=15$ otherwise. Then the approximate memory requirement for \texttt{encore} is:
 
 \begin{equation}
 2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
@@ -242,6 +242,7 @@ where $C$ is a small (usually less than 1GB) overhead. The memory requirement fo
 We note that the equation above is a lower bound on the memory and the actual requirement may vary slightly with the environment. The speed-up gained from multiple-threads is almost linear with the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading (max 32 threads) if you have sufficient memory available. 
 
 \section{Genome Assembly}
+\label{assem}
 
 The main pipeline of contig assembly consists of the following programs: \texttt{overlappr}, \texttt{hapsemblr} and \texttt{consensr}. These can either be run individually, or through the wrapper shell script \texttt{hapsemble}. We first give details of the individual programs and then explain how to use the wrapper script.
 
@@ -280,7 +281,7 @@ OPTIONS
 
 \subsection{hapsemblr}
 
-\texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly. It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required by \texttt{consensr}, which is then converted to a fasta file containing the contigs (see below).
+\texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly. It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required by \texttt{consensr}, which is then converted to a fasta file containing the contigs.
 
 \begin{lstlisting}
 
@@ -309,7 +310,6 @@ OPTIONS
 \end{lstlisting}
 
 \subsection{consensr}
-\label{cons}
 
 \texttt{consensr} computes a consensus alignment for each contig produced by \texttt{hapsemblr} and writes the results into a single fasta formatted file. As input, it takes a fastq file containing the reads and a file containing the contigs as output by \texttt{hapsemblr}. Note that the fastq file given as input to \texttt{consensr} should be identical to the one given as input to \texttt{overlappr}.
 
@@ -340,7 +340,6 @@ OPTIONS
 \end{lstlisting}
 
 \subsection{hapsemble}
-\label{hapscript}
 
 \texttt{hapsemble} is a wrapper script that executes the programs in the core Hapsembler pipeline in a logical order. Note that this script will not work unless the full path of the Hapsembler bin directory is added to your system path. The synopsis of the script and the options are described below.
 
@@ -395,7 +394,7 @@ You can use the \texttt{stage-start} and \texttt{stage-end} options to re-evalua
 
 \subsection{Performance}
 
-Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k$ be the smallest integer such that $2^{2k}>G$ where $G$ is the size of the genome to be assembled in base pairs. Then the approximate memory requirements for \texttt{overlappr} and \texttt{consensr} are:
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 270mbp, and $k=15$ otherwise. Then the approximate memory requirements for \texttt{overlappr} and \texttt{consensr} are:
 
 \begin{eqnarray}
 M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
@@ -509,9 +508,9 @@ The perl scripts \texttt{scarpa\_process} and \texttt{scarpa\_parser} use consta
 
 If you are running \texttt{scarpa} with contigs generated by a third-party assembler, please be aware that some NGS assemblers tend to report a large number of very short contigs ($<$75bp). Such contigs can not be reliably scaffolded, yet they increase the running time significantly. You can discard small contigs by setting the \texttt{--min\_contig} option as described above, however, we highly recommend removing these contigs before scaffolding. This will not only speed up the mapping process but also decrease the number of multi-mapped reads. 
 
-\subsection{Testing Hapsembler}
+\section{Testing Hapsembler}
 
-The Hapsembler package contains a small dataset and a demo script that can be used to test the scripts and binaries included in the package. Instructions on how to run the demo is given in the \texttt{SAMPLE.README} file that is located under hapsembler-\hapversion{}/sample. 
+The Hapsembler package contains a small dataset and a demo script that can be used to test the scripts and binaries included in the package. Instructions on how to run the demo is given in the \texttt{SAMPLE.README} file that is located under hapsembler-\hapversion{}/sample.
 
 \section{Frequently Asked Questions}
 \label{faq}

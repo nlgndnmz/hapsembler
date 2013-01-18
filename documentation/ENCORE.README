@@ -57,7 +57,7 @@ all questions and comments to nild@cs.toronto.edu.
     1) Preparing the reads:
     -----------------------
 
-    If you have Roche/454 reads or long Illumina reads (i.e. >100bp), it is
+    If you have Roche/454 reads or long Illumina reads (i.e. >150bp), it is
 highly recommended that you quality trim the reads before correcting them
 with Encore. For your convenience, the Encore package includes a program named
 for "preprocr" this task:
@@ -147,7 +147,7 @@ sequencing experiments such as RNA-seq.
     where:
 
     M -> the total number of base pairs in the reads
-    k -> 14 if the genome size is less than 268mbp, and 15 if it is larger
+    k -> 14 if the genome size is less than 270mbp, and 15 if it is larger
     t -> is the number of threads specified with --nthreads option
     n -> the number of reads
     C -> a small overhead (typically less than 1GB)
@@ -159,7 +159,10 @@ sequencing experiments such as RNA-seq.
 you have Sanger reads you may be able to correct them by specifiying the
 fourfivefour option. Color space reads (eg. ABI/SOLiD) or single-molecule
 sequencing reads (eg. PACBIO) are not supported.
+	
+-- MORE INFORMATION --
 
--- COPYRIGHT --
-
-    For licensing information see the file LICENSE.
+	If you have questions or need more help running Encore, please download 
+the extensive Hapsembler(+Encore&Scarpa) manual from
+http://compbio.cs.toronto.edu/hapsembler which includes information on how
+to run Encore and answers to frequently asked questions.

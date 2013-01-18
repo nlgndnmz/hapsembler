@@ -1,4 +1,4 @@
--------------  Hapsembler-2.0 INSTALLATION GUIDE --------------------------
+-------------  HAPSEMBLER INSTALLATION GUIDE --------------------------
 
 Last update: September 17, 2012
 
@@ -6,15 +6,15 @@ Last update: September 17, 2012
 
     Extract the tarfile by typing:
 
-"tar -xvzf hapsembler-2.0.tar.gz"
+"tar -xvzf hapsembler-X.X.tar.gz"
 
     After extracting the tarfile into the desired installation directory,
-change to the "hapsembler-2.0" directory. Once in this directory, type:
+change to the "hapsembler-X.X" directory. Once in this directory, type:
 
 "make"
 
     This command will create the binaries and place them under
-"hapsembler-2.0/bin/". To make the scripts and executables accessible from
+"hapsembler-X.X/bin/". To make the scripts and executables accessible from
 different directories, simply add the full path of this directory to your
 system PATH.
 
@@ -28,7 +28,7 @@ You can control the number of threads used by Hapsembler at runtime so there is
 no downside to compiling Hapsembler with OpenMP support.
 
     If installation is succesfull you should see the following binaries
-under "hapsembler-2.0/bin":
+under "hapsembler-X.X/bin":
 
     preprocr
     encore
@@ -39,7 +39,7 @@ under "hapsembler-2.0/bin":
 
     In addition to these binaries, you should also find a shell script named
 "hapsemble" and two perl scripts named "scarpa_parser" and "scarpa_process"
-under "hapsembler-2.0/bin".
+under "hapsembler-X.X/bin".
 
 -- SYSTEM REQUIREMENTS --
 
@@ -59,7 +59,7 @@ Keep in mind that actual requirements will vary with sequence coverage depth
 and repeat structure of the genome.
 
     For information on how to use Hapsembler, please see the README file or
-view the documentation (in pdf format) under "hapsembler-2.0/doc".
+view the documentation (in pdf format) under "hapsembler-X.X/doc".
 
 Please send your questions and bug reports to: <hapsembler@cs.toronto.edu>
 

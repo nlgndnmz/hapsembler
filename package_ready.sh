@@ -63,7 +63,7 @@ then
 	cp hapsemblerDEMO ./$DNAME/sample
 	cat ./documentation/SAMPLE.README | awk '{sub(/hapsembler-X.X/, "'$DNAME'"); print}' > ./$DNAME/sample/SAMPLE.README
 	cat ./documentation/README | awk '{sub(/hapsembler-X.X/, "'$DNAME'"); print}' > ./$DNAME/README
-	cp ./documentation/INSTALL ./$DNAME
+	cat ./documentation/INSTALL | awk '{sub(/hapsembler-X.X/, "'$DNAME'"); print}' > ./$DNAME/INSTALL
 	cp ./documentation/LICENSE ./$DNAME
 	cp ./documentation/HapsemblerDocumentation.pdf ./$DNAME/doc/${DNAME}_manual.pdf
 	cp scarpa_parser ./$DNAME/bin
