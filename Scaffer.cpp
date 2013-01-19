@@ -703,7 +703,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, int totalBases,
 			bootstrap_library(libMean, libSupport, histogram, histSize, Libs, k);
 	}
 
-	for(int k=1; k<=numLibs; k++)
+	for(int k=0; k<=numLibs; k++)
 		delete [] histogram[k];
 
 	delete [] histogram;
@@ -908,7 +908,7 @@ void Scaffer::chain_collapse()
 				if(!isOut)	// then we have to reverse the order of the contigs, otherwise everything remains as it is
 				{
 					LinkedIter<Containee> iterA(contigs[A].contains);
-					LinkedList<Containee> * tmpList = new LinkedList<Containee>(true);
+					LinkedList<Containee> * tmpList = new LinkedList<Containee>(false);		// do not delete data, just delete pointers
 					Containee * prv = iterA.get_first();
 					Containee * ce = iterA.get_next();
 
@@ -930,9 +930,8 @@ void Scaffer::chain_collapse()
 					prv->support = 1;
 					tmpList->insert_entry(prv);
 
-					contigs[A].contains.set_no_delete();
-					contigs[A].contains.clr_list();
-					contigs[A].contains.append_list(tmpList);	// this makes a deep copy
+					contigs[A].contains.clr_list(false);
+					contigs[A].contains.append_list_shallow(tmpList);	// this makes a shallow copy
 					delete tmpList;
 				}
 			}
@@ -1472,9 +1471,11 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 	delete [] ctags;
 	delete [] tags;
 	delete [] contigs;
+	delete [] contigLens;
 
 	ContigEdge::purge();
 	LinkedNode<ContigEdge>::purge();
+	LinkedNode<Containee>::purge();
 
 	return totalBases;
 }

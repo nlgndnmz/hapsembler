@@ -25,6 +25,7 @@ then
 	cat ./documentation/SCARPA.README | awk '{sub(/scarpa-X.X/, "'$DNAME'"); print}' > ./$DNAME/SCARPA.README
 	cp ./documentation/LICENSE ./$DNAME
 	cp ./sample/*.fq ./$DNAME/test
+	cp ./sample/contigs.fa ./$DNAME/test
 	cp scarpaDEMO ./$DNAME/test
 	chmod 644 ./$DNAME/*.h
 	chmod 644 ./$DNAME/*.cpp

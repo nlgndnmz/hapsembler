@@ -53,6 +53,7 @@ class LinkedList
         void del_entry(LinkedNode<TYPE> *, bool);
 
         void append_list(LinkedList<TYPE> *);	// sort of deep copy but appends to the tail
+		void append_list_shallow(LinkedList<TYPE> *);	// performs shallow copy
 
         void set_delete();
         void set_no_delete();
@@ -62,6 +63,7 @@ class LinkedList
 
         int get_size();
         void clr_list();
+		void clr_list(bool);
 
     private:
 
@@ -97,10 +99,7 @@ LinkedList<TYPE>::LinkedList()
 template<class TYPE>
 LinkedList<TYPE>::~LinkedList()
 {
-    clr_list(root);
-	root = NULL;
-	tail = NULL;
-	num_loaded = 0;
+    clr_list();
 }
 
 template<class TYPE>
@@ -146,6 +145,30 @@ void LinkedList<TYPE>::clr_list()
 	{
 		nextNode = theNode->next;
 		if(del_data)    // delete data if requested
+		{
+		   if(theNode->data != NULL)    // check if NULL
+		   {
+		       delete theNode->data;
+		       theNode->data = NULL;
+		   }
+		}
+		delete theNode;
+		theNode = nextNode;
+	}
+	root = NULL;
+	tail = NULL;
+	num_loaded = 0;
+}
+
+template<class TYPE>
+void LinkedList<TYPE>::clr_list(bool forceDelete)
+{
+	LinkedNode<TYPE> * nextNode;
+	LinkedNode<TYPE> * theNode = root;
+	while(theNode != NULL)
+	{
+		nextNode = theNode->next;
+		if(forceDelete)    // delete data if requested
 		{
 		   if(theNode->data != NULL)    // check if NULL
 		   {
@@ -311,6 +334,19 @@ void LinkedList<TYPE>::append_list(LinkedList<TYPE> * other_list)
 
 		TYPE * t = new TYPE(*(nd->data));
 		this->add_entry(t);
+		nd = nd->next;
+	}
+}
+
+template<class TYPE>
+void LinkedList<TYPE>::append_list_shallow(LinkedList<TYPE> * other_list)
+{
+	LinkedNode<TYPE> * nd = other_list->root;
+	while(nd != NULL)
+	{
+		assert(nd->data != NULL);
+		
+		this->add_entry(nd->data);
 		nd = nd->next;
 	}
 }

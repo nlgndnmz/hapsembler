@@ -4,26 +4,29 @@ Last update: December 7, 2012
 
 This directory should contain:
 
-    sample.fq -> A fastq formatted file containing simulated paired-end
-        Illumina reads of ~40x coverage. The mean insert size is 300bp.
+	sample.fq -> A fastq formatted file containing simulated paired-end
+		Illumina reads of ~40x coverage. The mean insert size is 300bp.
 		
 	sample2.fq -> A fastq file representing another library with ~20x
 		coverage. It contains simulated paired-end reads with an
 		insert size of 800bp.
+		
+	contigs.fa -> A fasta formatted file containing contigs previously
+		assembled from sample.fq.
 
-    TEST.README -> This file.
+	TEST.README -> This file.
 
 How to run the demo:
 
 	** Note that you will need to have Bowtie (version 0.12.7 or later)
 	installed in order to test Scarpa using this demo.
 
-    1) Build Scarpa following the instructions given in 
+	1) Build Scarpa following the instructions given in 
 	"scarpa-X.X/SCARPA.README".
 
-    2) Add the full path of "scarpa-X.X/bin" to your system path.
+	2) Add the full path of "scarpa-X.X/bin" to your system path.
 
-    3) Change your directory to "scarpa-X.X/test". 
+	3) Change your directory to "scarpa-X.X/test". 
 	
 	4) Change the value of NTHREADS in ./scarpaDEMO to the number of CPUs
 	available.
@@ -34,4 +37,4 @@ How to run the demo:
 	6) Run ./scarpaDEMO
 	
 	If the demo is successful, you will find a file named "scaffolds.fa" 
-    containing 1 scaffold of roughly 0.5 million base pairs.
+	containing 1 scaffold of roughly 0.5 million base pairs.

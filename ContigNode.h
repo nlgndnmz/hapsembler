@@ -90,6 +90,8 @@ ContigNode::ContigNode()
 
 ContigNode::~ContigNode()
 {
+	contains.set_delete();
+	contains.clr_list();
 	remove_all();	// base class method
 }
 
