@@ -53,6 +53,8 @@ class ContigEdge: public BiEdge
 		static void shrink();
 
 	private:
+	
+		bool alive;
 
 		static void init();
 

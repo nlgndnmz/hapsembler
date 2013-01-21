@@ -102,6 +102,7 @@ ContigEdge::ContigEdge()
 	support = 0;
 	lib = 0;
 	weight = 0;
+	alive = true;
 }
 
 ContigEdge::ContigEdge(int contig0, int contig1, ArrowType arrow0, ArrowType arrow1, int mean, int sd, int libNum, double w)
@@ -117,6 +118,7 @@ ContigEdge::ContigEdge(int contig0, int contig1, ArrowType arrow0, ArrowType arr
 	support = 1;
 	lib = libNum;
 	weight = w;
+	alive = true;
 }
 
 ContigEdge::ContigEdge(const ContigEdge & ce)
@@ -136,7 +138,7 @@ ContigEdge::ContigEdge(const ContigEdge & ce)
 
 ContigEdge::~ContigEdge()
 {
-	// nothing to do
+	alive = false;
 }
 
 void ContigEdge::merge(ContigEdge * ce)
