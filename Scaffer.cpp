@@ -1463,7 +1463,10 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 
 		chain_collapse();
 		for(int k=1; k<=numContigs; k++)
+		{
 			contigs[k].remove_all();
+			LinkedNode<ContigEdge>::shrink();
+		}
 	}
 
 	write_scafftmp(outputFilename);

@@ -50,6 +50,7 @@ class ContigEdge: public BiEdge
 		double weight;
 
 		static void purge();
+		static void shrink();
 
 	private:
 

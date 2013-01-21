@@ -53,6 +53,27 @@ void ContigEdge::operator delete(void * p)
 		chunkctr--;
 }
 
+void ContigEdge::shrink()
+{
+	if(pool != 0)
+	{
+		for(int i=0; i<poolnum; i++)
+		{
+			bool alldead = true;
+			for(int j=0; j<chunksize; j++)
+			{
+				if(pool[i][j].alive)
+					alldead = false;
+			}
+			if(alldead)
+			{
+				delete [] pool[i];
+				pool[i] = 0;
+			}
+		}
+	}
+}
+
 void ContigEdge::purge()
 {
 	if(pool != 0)

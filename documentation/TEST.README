@@ -11,7 +11,7 @@ This directory should contain:
 		coverage. It contains simulated paired-end reads with an
 		insert size of 800bp.
 		
-	contigs.fa -> A fasta formatted file containing contigs previously
+	contigs.fa -> A fasta formatted file containing 56 contigs previously
 		assembled from sample.fq.
 
 	TEST.README -> This file.

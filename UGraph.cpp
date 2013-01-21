@@ -522,8 +522,9 @@ int UGraph::oddcycle(int * X, int maxK, bool & ok)
 	delete [] S1;
 	delete [] S2;
 	delete [] que;
+	delete [] Q2;
 
-	for(int i=0; i<all; i++)
+	for(int i=0; i<maxAll; i++)
 		delete [] subsets[i];
 	delete [] subsets;
 
