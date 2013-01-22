@@ -4,33 +4,33 @@ Last update: January 11, 2012
 
 This directory should contain:
 
-    sample.fq -> A fastq formatted file containing simulated paired-end
-        Illumina reads of ~40x coverage. This dataset consists of a small
-        subset of the reads taken from Assemblathon1 (visit
-        http://assemblathon.org for more information).
+	sample.fq -> A fastq formatted file containing simulated paired-end
+		Illumina reads of ~40x coverage. This dataset consists of a small
+		subset of the reads taken from Assemblathon1 (visit
+		http://assemblathon.org for more information).
 
-    sample.info -> This is an example of library information file as
-        required by Hapsembler. The reads belong to a single library w/
-        insert size of 300bp and standard deviation of 30bp.
+	sample.info -> This is an example of library information file as
+		required by Hapsembler. The reads belong to a single library w/
+		insert size of 300bp and standard deviation of 30bp.
 		
 	sample2.fq -> A fastq file representing a second library with ~20x
 		coverage and it contains simulated paired reads with an
 		insert size and deviation of 800bp and 80bp respectively.
 		This file is used to test Scarpa.
 
-    SAMPLE.README -> This file.
+	SAMPLE.README -> This file.
 
 How to run the demo:
 
 	** Note that you will need to have Bowtie (version 0.12.7 or later)
 	installed in order to test Scarpa using this demo.
 
-    1) Build Hapsembler executables following the instructions given in
-    "hapsembler-X.X/INSTALL".
+	1) Build Hapsembler executables following the instructions given in
+	"hapsembler-X.X/INSTALL".
 
-    2) Add the full path of "hapsembler-X.X/bin" to your system path.
+	2) Add the full path of "hapsembler-X.X/bin" to your system path.
 
-    3) Change your directory to "hapsembler-X.X/sample". 
+	3) Change your directory to "hapsembler-X.X/sample". 
 	
 	4) Change the value of NTHREADS in ./hapsemblerDEMO to the number of CPUs
 	available.
@@ -44,13 +44,13 @@ How to run the demo:
 ./hapsemblerDEMO --full 
 
 	If the demo is successful, you will find a file named "scaffolds.fa" 
-    containing 1 scaffold of roughly 0.5 million base pairs.
+	containing 1 scaffold of roughly 0.5 million base pairs.
 
 	7) To test only Encore and Hapsembler (excluding Scarpa), run:
 	
 ./hapsemblerDEMO --assem
 	
-    If the demo is successful, then the file "contigs.fa" should contain
+	If the demo is successful, then the file "contigs.fa" should contain
 	18 contigs totalling roughly 0.5 million base pairs.
 
 WARNING: You will need a machine with 7GB or more memory to run this demo.

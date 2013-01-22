@@ -37,12 +37,15 @@ fi
 
 if [ "$2" == encore  ]
 then
+	mkdir ./$DNAME/test
 	cp Dna.h DnaRead.h HapSuite.h HapUtils.h KmerHash.h KmerIter.h KmerList.h Naive.h ReadAln.h ReadMatch.h SmithWaterman.h ./$DNAME
 	cp Dna.cpp DnaRead.cpp HapUtils.cpp KmerHash.cpp KmerIter.cpp KmerList.cpp Naive.cpp ReadAln.cpp ReadMatch.cpp SmithWaterman.cpp ./$DNAME
 	cp GraphDef.h KmerNode.h DnaAlignment.cpp ./$DNAME
 	cp makefile_encore ./$DNAME/makefile
 	cat ./documentation/ENCORE.README | awk '{sub(/encore-X.X/, "'$DNAME'"); print}' > ./$DNAME/ENCORE.README
 	cp ./documentation/LICENSE ./$DNAME
+	cp ./sample/sample.fq ./$DNAME/test
+	chmod 644 ./$DNAME/test/sample.fq
 	chmod 644 ./$DNAME/*.h
 	chmod 644 ./$DNAME/*.cpp
 fi

@@ -50,22 +50,19 @@ OPTIONS \n\
         Fastq formatted input file (required) \n\
 \n\
     --fastq2|-x fastq_filename \n\
-        The second reads in fastq format for paired libraries. The order of the reads should match the order \
-of the reads in the file given with --fastq option. \n\
+        The second reads in fastq format for paired libraries. The order of the reads should match the order of the reads in the file given with --fastq option. \n\
 \n\
     --output|-o output_filename \n\
         Output filename. Default is standard output. \n\
 \n\
     --revcomp|-n [1|2|3] \n\
-        Reverse complement the first (1), the second (2) or both (3) reads in a read pair. If this option is \
-set all reads are taken to be paired. \n\
+        Reverse complement the first (1), the second (2) or both (3) reads in a read pair. If this option is set all reads are taken to be paired. \n\
 \n\
     --phred|-d N \n\
         Set the phred offset for the quality values to N. Default value is 33 for fourfivefour and 64 for illumina. \n\
 \n\
     --threshold|-s E \n\
-        Set the threshold for trimming. E must be a real number between 0.0 (no trimming) and 0.5 (most trimming). \
-Default values are 0.05 for illumina and 0.1 for fourfivefour. \n\n";
+        Set the threshold for trimming. E must be a real number between 0.0 (no trimming) and 0.5 (most trimming). Default values are 0.05 for illumina and 0.1 for fourfivefour. \n\n";
 #endif
 
 #ifdef CORRECTR
@@ -90,8 +87,7 @@ OPTIONS \n\
         If set to yes, the reads are treated as single stranded. Default value is no. \n\
 \n\
     --epsilon|-e X (real number) \n\
-        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. \
-Default values for illumina and fourfivefour are 0.04 and 0.06 respectively. \n\
+        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. Default values for illumina and fourfivefour are 0.04 and 0.06 respectively. \n\
 \n\
     --phred|-d N \n\
         Set the phred offset for the quality values to N. Default value is 33 for fourfivefour and 64 for illumina. \n\n";
@@ -119,8 +115,7 @@ OPTIONS \n\
         If set to yes, the reads are treated as single stranded. Default value is no. \n\
 \n\
     --epsilon|-e X (real number) \n\
-        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. \
-Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively. \n\n";
+        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. Default values for illumina and fourfivefour are 0.04 and 0.06 respectively. \n\n";
 #endif
 
 #ifdef CONSENSR
@@ -235,7 +230,7 @@ int main(int argc, char **argv)
 		else if(strcmp(argv[i], "--min-size") == 0 || strcmp(argv[i], "-m") == 0)
 			sscanf( argv[i+1], "%d", &min_contig_size);
 
-		else if(strcmp(argv[i], "--threshold") == 0 || strcmp(argv[i], "-t") == 0)
+		else if(strcmp(argv[i], "--threshold") == 0 || strcmp(argv[i], "-s") == 0)
 			sscanf( argv[i+1], "%lf", &trim_threshold);
 
 		else

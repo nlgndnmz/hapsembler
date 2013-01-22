@@ -80,7 +80,7 @@ The Hapsembler package requires the following to install and run successfully. L
     - perl (v5.8.8)
 \end{verbatim}
 
-You will need OpenMP to run Hapsembler in multi-threaded more. You can get the list of compilers supporting OpenMP at \url{http://openmp.org/wp/}. Note that you can control the number of threads used by Hapsembler at runtime so there is no downside to compiling Hapsembler with this option. If you are unable to obtain a compiler that supports OpenMP you can still compile the binaries for single-threaded use with the following directive:
+You will need OpenMP to run Hapsembler in multi-threaded mode. You can get the list of compilers supporting OpenMP at \url{http://openmp.org/wp/}. Note that you can control the number of threads used by Hapsembler at runtime so there is no downside to compiling Hapsembler with this option. If you are unable to obtain a compiler that supports OpenMP you can still compile the binaries for single-threaded use with the following directive:
 
 \begin{verbatim}
 make NO_OMP=1
@@ -152,12 +152,12 @@ According to some recent studies, mate-pair production reads may have a high per
 
 \section{Hapsembler Pipeline}
 
-The Hapsembler pipeline is distributed among several executables under 3 main stages: 1) error correction 2) genome assembly and 3) scaffolding. The following sections describe each stage in detail and how to use the individual tools. If you forget the options available to any program in the Hapsembler package, simply run it with option "--help" and a help message will be displayed.
+The Hapsembler pipeline is distributed among several executables under 3 main stages: 1) error correction 2) genome assembly and 3) scaffolding. The following sections describe each stage in detail and how to use the individual tools. If you forget the options available to any program in the Hapsembler package, simply run it with option \texttt{--help} and a help message will be displayed.
 
 \section{Error Correction}
 \label{ercor}
 
-This stage is performed to boost the quality of your sequencing reads by quality trimming and/or correction of sequencing errors. If you have reasons to believe you have high quality reads (e.g. simulated reads) you may skip this stage and proceed with assembly (see section \ref{assem}).
+This stage is performed to boost the quality of your sequencing reads by quality trimming and/or correction of sequencing errors. If you have reasons to believe you have high quality reads (e.g. simulated error-free reads) you may skip this stage and proceed with assembly (see section \ref{assem}).
 
 \subsection{preprocr}
 \label{utils}
@@ -231,7 +231,7 @@ OPTIONS
 
 \subsection{Performance}
 
-Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 268mbp, and $k=15$ otherwise. Then the approximate memory requirement for \texttt{encore} is:
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 270mbp, and $k=15$ otherwise. Then the approximate memory requirement for \texttt{encore} is:
 
 \begin{equation}
 2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
@@ -239,7 +239,7 @@ Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and
 
 where $C$ is a small (usually less than 1GB) overhead. The memory requirement for \texttt{preprocr} is constant and its running time is linear.
 
-We note that the equation above is a lower bound on the memory and the actual requirement may vary slightly with the environment. The speed-up gained from multiple-threads is almost linear with the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading (max 32 threads) if you have sufficient memory available. 
+We note that the actual requirements may vary with the environment. The speed-up gained from multiple-threads is almost linear in the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading if you have sufficient memory available. 
 
 \section{Genome Assembly}
 \label{assem}
@@ -275,13 +275,13 @@ OPTIONS
         If set to yes, the reads are treated as single stranded. Default value is no. 
 
     --epsilon|-e X (real number) 
-        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively. 
+        Set the expected discrepancy (mismatches+indels) rate. X must be a real number between 0.01 and 0.09. Default values for illumina and fourfivefour are 0.04 and 0.06 respectively. 
 
 \end{lstlisting}
 
 \subsection{hapsemblr}
 
-\texttt{hapsemblr} is the main assembly program implementing the overlap/mate-pair graph based assembly. It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required by \texttt{consensr}, which is then converted to a fasta file containing the contigs.
+\texttt{hapsemblr} is the main assembly program implementing the overlap graph based assembly. It takes the two files produced by \texttt{overlappr} as input and outputs a contig information file required by \texttt{consensr}, which is then converted to a fasta file containing the contigs.
 
 \begin{lstlisting}
 
@@ -374,7 +374,7 @@ OPTIONS
         If set to yes, re-calculates the mean and standard deviation of each library. The default is yes.
      
     --epsilon|-e E (real number)
-        Set the expected (mismatches+indels) rate. E must be a real number between 0.01 and 0.09. Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively.
+        Set the expected (mismatches+indels) rate. E must be a real number between 0.01 and 0.09. Default values for illumina and fourfivefour are 0.04 and 0.06 respectively.
      
     --phred|-d N (integer)
         Set the phred offset for the quality values to N. Default values for illumina and fourfivefour are 64 and 33 respectively.
@@ -401,7 +401,7 @@ M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
 2M + 37n + C
 \end{eqnarray}
 
-where $C$ is a small (usually less than 1GB) overhead. Note that, the above should still be taken as lower bounds: the actual memory used by these programs might vary in different environments. The memory requirements of \texttt{hapsemblr} is harder to estimate since it depends on factors that can not be immediately measured using the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
+where $C$ is a small (usually less than 1GB) overhead. Note that, the actual memory used by these programs might vary slightly in different environments. The memory requirement of \texttt{hapsemblr} is harder to estimate since it depends on factors that can not be immediately measured from the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
 
 \section{Scaffolding}
 \label{scaff}
@@ -530,7 +530,7 @@ For multiploid organisms, polymorphism is also present between the haplotypes of
 \subsection{Can Hapsembler assemble haploid genomes?}
 \label{haploid}
 
-Hapsembler can assemble genomes with low/no polymorphism (e.g. bacteria) however it is designed for highly polymorphic genomes and therefore may not be the best choice for all organisms. If you have a very large genome (i.e. >1gbp) with low polymorphism (e.g. mammalian) and high coverage of short reads, we suggest that you use assemblers optimized for such data (e.g. \cite{simpson}).
+Hapsembler can assemble genomes with low/no polymorphism (e.g. bacteria) however it is designed for highly polymorphic genomes and therefore may not be the best choice for all organisms. If you have a large genome ($>$1gbp) with low polymorphism (e.g. mouse, human) and high coverage of short reads, we suggest that you use assemblers optimized for such data (e.g. \cite{simpson}).
 
 \subsection{Can Hapsembler assemble human genomes?}
 
@@ -546,11 +546,11 @@ Unfortunately, color space reads (i.e. ABI/SOLiD platform) are not supported by 
 
 \subsection{Does Hapsembler perform scaffolding?}
 
-Yes! The Hapsembler package now includes a stand-alone scaffolding tool called Scarpa. See section \ref{scaff} for details. If you are only interested in scaffolding, you can also download Scarpa from \url{http://compbio.cs.toronto.edu/scarpa} instead of installing the entire Hapsembler package.
+Yes! The Hapsembler package now includes a stand-alone scaffolding tool called Scarpa. See section \ref{scaff} for details. If you are only interested in scaffolding, you can also download Scarpa from \url{http://compbio.cs.toronto.edu/hapsembler/scarpa.html} instead of installing the entire Hapsembler package.
 
 \subsection{Can I use Hapsembler just to do error correction?}
 
-Yes! See section \ref{ercor} for details. If you only intend to do error correction on your reads, you can also download the error correction module Encore from \url{http://compbio.cs.toronto.edu/hapsembler} instead of installing the entire Hapsembler package.
+Yes! See section \ref{ercor} for details. If you only intend to do error correction on your reads, you can also download the error correction module Encore from \url{http://compbio.cs.toronto.edu/hapsembler/encore.html} instead of installing the entire Hapsembler package.
 
 \subsection{Can I run Hapsembler on platforms other than Linux?}
 
@@ -562,7 +562,7 @@ Please cite Hapsembler and Encore as: \cite{donmez11}. Scarpa is currently in pr
 
 \subsection{I found a bug, what do I do?}
 
-Send any suggestions or bug reports to: hapsembler@cs.toronto.edu. Please try to give as much detail as possible to trace the bug: the computing environment, sample data (if possible), parameters used, etc.
+Send any suggestions or bug reports to: nild@cs.toronto.edu. Please try to give as much detail as possible to trace the bug: the computing environment, sample data (if possible), parameters used, etc.
 
 \bibliography{HapsemblerDocumentation}
 \bibliographystyle{siam}

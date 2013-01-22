@@ -50,7 +50,7 @@ print_help()
     echo "    If set to yes, re-calculates the mean and standard deviation of each library. The default is yes."
 	echo " "
 	echo "--epsilon|-e E (real number)"
-	echo "    Set the expected (mismatches+indels) rate. E must be a real number between 0.01 and 0.09. Default values of EPSILON for illumina and fourfivefour are 0.04 and 0.06 respectively."
+	echo "    Set the expected (mismatches+indels) rate. E must be a real number between 0.01 and 0.09. Default values for illumina and fourfivefour are 0.04 and 0.06 respectively."
 	echo " "
 	echo "--phred|-d N (integer)"
 	echo "    Set the phred offset for the quality values to N. Default values for illumina and fourfivefour are 64 and 33 respectively."
