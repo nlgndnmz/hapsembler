@@ -1,6 +1,6 @@
 -------------  SCARPA INSTALLATION GUIDE --------------------------
 
-Last update: December 17, 2012
+Last update: February 27, 2013
 
 -- TO INSTALL ---------------------------------------------------------
 
@@ -77,6 +77,8 @@ lib1.fastq.scarpa.fq
 lib2.fastq.scarpa.fq
 
 	You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa using a read mapper and get the results in a single SAM formatted file. The mapping should be performed in single-end mode. The *.scarpa.fq files are not needed after the SAM file is created, you may delete them subsequently to free disk space.
+	
+IMPORTANT: Make sure to tell your mapper to report the header section; the lines starting with "@SQ" are required by scarpa_parser. In addition, if possible, use a mapper that can report the optional "NM:i" tag, which is used for edit distance.
 
 	---------------------------
 	2) Processing the mappings:

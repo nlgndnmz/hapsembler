@@ -23,7 +23,7 @@
 }
 
 % change the following to the package version
-\newcommand{\hapversion}{2.1}
+\newcommand{\hapversion}{2.11}
 
 \title{Hapsembler version \hapversion{} \\ ( + Encore \& Scarpa) \\ Manual }
 
@@ -31,7 +31,7 @@
 \emph{Department of Computer Science} \\
 \emph{University of Toronto} }
 
-\date{January 13, 2013}
+\date{February 27, 2013}
 
 \renewcommand\bibname{References}
 
@@ -445,6 +445,8 @@ lib2.fq.scarpa.fq
 \end{lstlisting}
 
 You should map the file(s) *.scarpa.fq to contigs.fasta.scarpa.fa using a read mapper and get the results in a single SAM formatted file. The mapping should be performed in single-end mode. The *.scarpa.fq files are not needed after the SAM file is created, you may delete them subsequently to free disk space.
+
+Make sure to tell your mapper to report the header section; the lines starting with ``@SQ'' are required by scarpa\_parser. In addition, if possible, use a mapper that can report the optional ``NM:i'' tag, which is used for edit distance.
 
 \subsection{scarpa\_parser}
 

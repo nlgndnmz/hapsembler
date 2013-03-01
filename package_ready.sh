@@ -21,7 +21,7 @@ then
 	cp makefile_scarpa ./$DNAME/makefile
 	cp scarpa_parser ./$DNAME/bin
 	cp scarpa_process ./$DNAME/bin
-	cp ./documentation/TEST.README ./$DNAME/test
+	cat ./documentation/TEST.README |awk '{sub(/scarpa-X.X/, "'$DNAME'"); print}' > ./$DNAME/test/TEST.README
 	cat ./documentation/SCARPA.README | awk '{sub(/scarpa-X.X/, "'$DNAME'"); print}' > ./$DNAME/SCARPA.README
 	cp ./documentation/LICENSE ./$DNAME
 	cp ./sample/*.fq ./$DNAME/test

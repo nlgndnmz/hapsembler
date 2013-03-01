@@ -1,9 +1,8 @@
 /*****************************************************************************
     $Author: Nilgun Donmez $
-    $Date: 2012-09-20 17:27:54 -0400 (Thu, 20 Sep 2012) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,8 +22,8 @@
 #ifndef HAP_SUITE_H
 #define HAP_SUITE_H
 
-#define HAPVERSION 2.1
-#define SCARPAVERSION 0.2
+#define HAPVERSION 2.11
+#define SCARPAVERSION 0.21
 #define ENCOREVERSION 1.2
 
 #endif
