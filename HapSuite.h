@@ -24,6 +24,6 @@
 
 #define HAPVERSION 2.11
 #define SCARPAVERSION 0.21
-#define ENCOREVERSION 1.2
+#define ENCOREVERSION 1.21
 
 #endif
