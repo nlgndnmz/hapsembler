@@ -31,7 +31,7 @@
 \emph{Department of Computer Science} \\
 \emph{University of Toronto} }
 
-\date{February 27, 2013}
+\date{February 28, 2013}
 
 \renewcommand\bibname{References}
 
@@ -231,15 +231,15 @@ OPTIONS
 
 \subsection{Performance}
 
-Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 270mbp, and $k=15$ otherwise. Then the approximate memory requirement for \texttt{encore} is:
+Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 270mbp, and $k=15$ otherwise and $F$ is the size of the input fastq file in bytes. Then the approximate memory requirement for \texttt{encore} is:
 
 \begin{equation}
-2M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
+F + 14(M/k) + 10(2^{2k}) + n(8t + 60) + C \\
 \end{equation}
 
-where $C$ is a small (usually less than 1GB) overhead. The memory requirement for \texttt{preprocr} is constant and its running time is linear.
+where $C$ is a small (usually less than 2GB) overhead. The memory requirement for \texttt{preprocr} is constant and its running time is linear.
 
-We note that the actual requirements may vary with the environment. The speed-up gained from multiple-threads is almost linear in the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading if you have sufficient memory available. 
+We note that the actual requirements may vary slightly. The speed-up gained from multiple-threads is almost linear in the number of threads used as long as the machine is not overcrowded. Thus, we strongly recommend enabling multi-threading if you have sufficient memory available. 
 
 \section{Genome Assembly}
 \label{assem}
@@ -397,11 +397,11 @@ You can use the \texttt{stage-start} and \texttt{stage-end} options to re-evalua
 Suppose you have $n$ reads totalling to $M$ base pairs, $t$ threads are used and let $k=14$ if the genome size to be assembled is less than 270mbp, and $k=15$ otherwise. Then the approximate memory requirements for \texttt{overlappr} and \texttt{consensr} are:
 
 \begin{eqnarray}
-M + 14(M/k) + 10(2^{2k}) + n(8t + 25) + C \\
+M + 14(M/k) + 10(2^{2k}) + n(8t + 52) + C \\
 2M + 37n + C
 \end{eqnarray}
 
-where $C$ is a small (usually less than 1GB) overhead. Note that, the actual memory used by these programs might vary slightly in different environments. The memory requirement of \texttt{hapsemblr} is harder to estimate since it depends on factors that can not be immediately measured from the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
+where $C$ is a small (usually less than 2GB) overhead. Note that, the actual memory used by these programs might vary slightly in different environments. The memory requirement of \texttt{hapsemblr} is harder to estimate since it depends on factors that can not be immediately measured from the raw input. Typically, \texttt{hapsemblr} will take longer and require more memory when reads are paired. If your machine does not have enough memory for paired assembly, you may still be able to perform unpaired assembly by omitting the \texttt{--library} argument.
 
 \section{Scaffolding}
 \label{scaff}

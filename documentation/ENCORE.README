@@ -118,15 +118,16 @@ OPTIONS
 
 	The memory required by Encore can be estimated by the following formula:
 
-	2*M + 14*(M/k) + 10*(4^(k)) + n*(8*t + 25) + C
+	F + 14*(M/k) + 10*(4^(k)) + n*(8*t + 60) + C
 
 	where:
 
+	F -> total size of the input fastq file in bytes
 	M -> the total number of base pairs in the reads
 	k -> 14 if the genome size is less than 270mbp, and 15 if it is larger
 	t -> is the number of threads specified with --nthreads option
 	n -> the number of reads
-	C -> a small overhead (typically less than 1GB)
+	C -> a small overhead (typically less than 2GB)
 
 -- LIMITATIONS --
 
