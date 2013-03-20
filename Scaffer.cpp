@@ -1,9 +1,8 @@
 /*****************************************************************************
-    $Author: $
-    $Date: $
+    $Author: Nilgun Donmez$
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -653,7 +652,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, int totalBases,
 		if(tags[j].contigID >= 0 && tags[i].contigID >= 0)
 			Libs[t].coverage += 1;
 
-		if(tags[i].contigID == tags[j].contigID && tags[i].contigID >= 0 && ctags[tags[i].contigID].length > NX)
+		if(tags[i].contigID == tags[j].contigID && tags[i].contigID >= 0 && ctags[tags[i].contigID].length > (NX - 2))
 		{
 			int distance = tags[j].offset - tags[i].offset;
 			if(tags[i].strand != tags[j].strand && distance > 0)	// otherwise the orientation and/or mapping must be wrong
@@ -685,12 +684,12 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, int totalBases,
 
 		cout << "--- Statistics for library #" << k;
 		cout << " (support: " << libSupport[k] <<", confidence: "<< confidence << ") --- " << endl;
-		if(NX < 2*libMean[k])	// the estimate may not be reliable
+		if(NX < 2*libMean[k] || success[k] < 10)	// the estimate may not be reliable
 		{
 			cout << "WARNING: support is too low, library statistics will not be altered!" << endl;
 			continue;
 		}
-
+			
 		double ratio = success[k] / (double) (success[k] + failure[k]);
 		Libs[k].minSupport = max(Libs[k].minSupport, int(log(epsilon) / log(1-ratio)));
 
