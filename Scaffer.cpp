@@ -613,7 +613,7 @@ bool Scaffer::assign_components(int step, int & gain, int lib)
 	return completed;
 }
 
-void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, int totalBases,
+void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBases,
 	int NX, ContigTag * ctags, double epsilon)
 {
 	long long int * libMean = new long long int[numLibs+1];
@@ -1397,7 +1397,7 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 	}
 	check_n_close(inputFile);
 
-	int totalBases = 0;
+	long int totalBases = 0;
 	int * contigLens = new int[numContigs];
 	for(int k=1; k<=numContigs; k++)
 	{

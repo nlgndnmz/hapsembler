@@ -98,12 +98,12 @@ int compare(const void * a, const void * b)
   return ( *(int*)a - *(int*)b );
 }
 
-int length_stats(int * lengths, int num, int total, double frac)
+int length_stats(int * lengths, int num, long int total, double frac)
 {
 	qsort(lengths, num, sizeof(int), compare);
-	int soFar = 0;
 	int nX = 0;
-	int cutoff = (int)(frac * total);
+	long int soFar = 0;	
+	long int cutoff = (int)(frac * total);
 	for(int i=num-1; i>=0; i--)
 	{
 		soFar += lengths[i];
