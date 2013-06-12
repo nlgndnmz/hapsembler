@@ -23,7 +23,7 @@
 #define HAP_SUITE_H
 
 #define HAPVERSION 2.12
-#define SCARPAVERSION 0.22
+#define SCARPAVERSION 0.23
 #define ENCOREVERSION 1.21
 
 #endif

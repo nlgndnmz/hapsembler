@@ -43,7 +43,7 @@ class Scaffer
 
 	private:
 
-		void adjust_libraries(ReadTag *, bool, int, int, ContigTag *, double);
+		void adjust_libraries(ReadTag *, bool, long int, int, ContigTag *, double);
 
 		int fill_contigs(ReadTag *, int);
 		void chain_collapse();

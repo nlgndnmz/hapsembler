@@ -47,7 +47,7 @@ void swap_que_elts(int qs1, int qs2, QStruct * que, PStruct * ptrs);
 int compare(const void * a, const void * b);
 
 // Used to report N50 and other assembly statistics by consensr and scaffr
-int length_stats(int * lengths, int num, int total, double frac=0.5);
+int length_stats(int * lengths, int num, long int total, double frac=0.5);
 
 // Required by the lexdfs method in OvlGraph.h
 bool larger(const std::vector<int> & v1, const std::vector<int> & v2);
