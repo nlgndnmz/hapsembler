@@ -39,7 +39,7 @@ class Scaffer
 
 		void read_info(char *, int);
 		int read_mappings(char *, char *, bool);
-		int write_scaffolds(char *, char *, int);
+		int write_scaffolds(char *, char *, long int);
 
 	private:
 

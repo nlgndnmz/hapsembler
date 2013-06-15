@@ -616,7 +616,7 @@ bool Scaffer::assign_components(int step, int & gain, int lib)
 void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBases,
 	int NX, ContigTag * ctags, double epsilon)
 {
-	long long int * libMean = new long long int[numLibs+1];
+	long int * libMean = new long int[numLibs+1];
 	int * libSupport = new int[numLibs+1];
 
 	int * success = new int[numLibs+1];
@@ -635,7 +635,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 		histogram[k] = new int[histSize+1];
 		for(int d=0; d<=histSize; d++)
 			histogram[k][d] = 0;
-	}
+	}		
 
 	for(int k=1; k<=numPairs; k++)
 	{
@@ -647,7 +647,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			j = i-1;
 		}
 
-		int t = Pairs[i].lib;
+		int t = Pairs[i].lib;			
 
 		if(tags[j].contigID >= 0 && tags[i].contigID >= 0)
 			Libs[t].coverage += 1;
@@ -657,7 +657,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			int distance = tags[j].offset - tags[i].offset;
 			if(tags[i].strand != tags[j].strand && distance > 0)	// otherwise the orientation and/or mapping must be wrong
 			{
-				distance += Pairs[j].length;
+				distance += Pairs[j].length;				
 				if(distance < histSize)
 				{
 					histogram[t][distance] += 1;
@@ -673,13 +673,15 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			}
 			else
 				failure[t]++;
-		}
+		}			
 	}
+	
+	cout << "processed the reads" << endl;
 
 	for(int k=1; k<=numLibs; k++)
 	{
 		double confidence = (double)libSupport[k]/Libs[k].coverage;
-		Libs[k].coverage = totalBases / Libs[k].coverage;	// this will actually serve as the arrival rate
+		Libs[k].coverage = totalBases/Libs[k].coverage;	// this will actually serve as the arrival rate
 		libMean[k] = int(libMean[k]/(double)libSupport[k]);
 
 		cout << "--- Statistics for library #" << k;
@@ -694,7 +696,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 		Libs[k].minSupport = max(Libs[k].minSupport, int(log(epsilon) / log(1-ratio)));
 
 		cout << "Success ratio: " << ratio << " (" << success[k] << "/" << failure[k]+success[k] << ")" << endl;
-		cout << "Estimated coverage: " << (Libs[k].coverage / totalBases) * libMean[k] << endl;
+		cout << "Estimated coverage: " << (Libs[k].coverage/totalBases) * libMean[k] << endl;
 		cout << "Minimum support is set to " << Libs[k].minSupport << endl;
 
 		// what follows is a bootstrap method to adjust the library mean and deviation
@@ -1404,7 +1406,7 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 		contigLens[k-1] = ctags[k].length;
 		totalBases += ctags[k].length;
 	}
-
+	
 	int N50 = length_stats(contigLens, numContigs, totalBases, 0.5);
 	adjust_libraries(tags, calibrate, totalBases, N50, ctags, 0.001);		// re-calculate the library mean and variance
 
@@ -1417,6 +1419,8 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 		contigs[k].containedLen = ctags[k].length;
 		contigs[k].coverage = (ctags[k].count / (double)ctags[k].length);
 	}
+	
+	cout << "starting the loop" << endl;
 
 	for(int lib=1; lib<=numLibs; lib++)
 	{
@@ -1466,9 +1470,11 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 		
 		ContigEdge::shrink();
 		LinkedNode<ContigEdge>::shrink();	
-	}
+	}		
 
 	write_scafftmp(outputFilename);
+	
+	cout << "has finished writing the scaffold templates" << endl; 
 
 	delete [] ctags;
 	delete [] tags;
@@ -1482,7 +1488,7 @@ int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool cal
 	return totalBases;
 }
 
-int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, int totalLength)
+int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, long int totalLength)
 {
 	ofstream outputFile;
 	open_n_check(outputFile, outputFilename);
@@ -1496,9 +1502,13 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, int t
 	ifstream scaffoldFile;
 	open_n_check(scaffoldFile, ifname);
 
+	cout << "attempting big allocation" << endl;
+	
 	DnaRead * contigSeq = new DnaRead[numContigs+1];
 	char * sequences = new char[totalLength+numContigs+1];
 
+	cout << "done big allocation" << endl;
+	
 	bool * written = new bool[numContigs+1];
 	for(int i=0; i<=numContigs; i++)
 		written[i] = false;
@@ -1513,6 +1523,8 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, int t
 	char * contigNum = new char[1024];
 	int nameCounter = 0;
 	int sequenceCounter = 0;
+	
+	cout << "allocated the arrays, now starting to read the contigs" << endl;
 
 	ifstream fastaFile;
 	open_n_check(fastaFile, contigFilename);
@@ -1557,13 +1569,15 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, int t
 
 	contigSeq[currentContig].length = sequenceCounter;	// finalize the last contig
 	check_n_close(fastaFile);
-
+	
+	cout << "finished reading the contigs" << endl;
+	
 	int scaffoldNum = 0;
 	int bytes = 0;
 	int textwidth = 80;
 	bool newScaffold = true;
 
-	int total = 0;
+	long int total = 0;
 	int * scaffoldLengths = new int[numContigs+1];
 	int counter = 0;
 

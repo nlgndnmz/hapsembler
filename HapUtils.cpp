@@ -188,7 +188,7 @@ void calculate_het_cutoff(int * table, int max_overlaps, double err, int max_t, 
 	}
 }
 
-void bootstrap_library(long long int * libMean, int * libSupport, int ** histogram,
+void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
 	int histSize, Library * Libs, int k, bool upperOnly)
 {
 	long long int newMean = 0;

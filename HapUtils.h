@@ -59,7 +59,7 @@ bool larger_eq(const std::vector<int> & v1, const std::vector<int> & v2);
 void calculate_het_cutoff(int * table, int max_overlaps, double err, int max_t, double prob);
 
 // used by OvlGraph.cpp and by Scaffer.cpp to adjust the library statistics
-void bootstrap_library(long long int * libMean, int * libSupport, int ** histogram,
+void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
  int histSize, Library * Libs, int k, bool upperOnly=false);
 
 #endif // HAP_UTILS_H

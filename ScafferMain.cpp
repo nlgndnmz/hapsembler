@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 		if(outputFilename == NULL) usage(argv[0], " ", "Error: No output file is given!");
 
 		scaff->read_info(libraryFilename, minSupport);
-		int totalLength = scaff->read_mappings(mappingsFilename, outputFilename, calibrate);
+		long int totalLength = scaff->read_mappings(mappingsFilename, outputFilename, calibrate);
 		scaff->write_scaffolds(contigsFilename, outputFilename, totalLength);
 
 		delete scaff;
