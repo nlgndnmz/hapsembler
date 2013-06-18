@@ -1343,7 +1343,7 @@ int Scaffer::prune_graph()
 	return total;
 }
 
-int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool calibrate)
+long int Scaffer::read_mappings(char * inputFilename, char * outputFilename, bool calibrate)
 {
 	ifstream inputFile;
 	open_n_check(inputFile, inputFilename);
@@ -1501,13 +1501,9 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, long 
 
 	ifstream scaffoldFile;
 	open_n_check(scaffoldFile, ifname);
-
-	cout << "attempting big allocation" << endl;
 	
 	DnaRead * contigSeq = new DnaRead[numContigs+1];
 	char * sequences = new char[totalLength+numContigs+1];
-
-	cout << "done big allocation" << endl;
 	
 	bool * written = new bool[numContigs+1];
 	for(int i=0; i<=numContigs; i++)
@@ -1523,8 +1519,6 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, long 
 	char * contigNum = new char[1024];
 	int nameCounter = 0;
 	int sequenceCounter = 0;
-	
-	cout << "allocated the arrays, now starting to read the contigs" << endl;
 
 	ifstream fastaFile;
 	open_n_check(fastaFile, contigFilename);
@@ -1569,8 +1563,6 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, long 
 
 	contigSeq[currentContig].length = sequenceCounter;	// finalize the last contig
 	check_n_close(fastaFile);
-	
-	cout << "finished reading the contigs" << endl;
 	
 	int scaffoldNum = 0;
 	int bytes = 0;

@@ -576,7 +576,7 @@ void OvlGraph::mark_single_nodes(double arrival, double cutoff)
 // adjust the insert size statistics
 void OvlGraph::calibrate_libraries(char * filename)
 {
-	long long int * libMean = new long long int[numLibs+1];
+	long int * libMean = new long int[numLibs+1];
 	int * libSupport = new int[numLibs+1];
 	int * libCov = new int[numLibs+1];
 
