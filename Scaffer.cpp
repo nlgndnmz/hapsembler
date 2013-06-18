@@ -674,9 +674,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			else
 				failure[t]++;
 		}			
-	}
-	
-	cout << "processed the reads" << endl;
+	}		
 
 	for(int k=1; k<=numLibs; k++)
 	{
@@ -1418,9 +1416,7 @@ long int Scaffer::read_mappings(char * inputFilename, char * outputFilename, boo
 		contigs[k].len = ctags[k].length;
 		contigs[k].containedLen = ctags[k].length;
 		contigs[k].coverage = (ctags[k].count / (double)ctags[k].length);
-	}
-	
-	cout << "starting the loop" << endl;
+	}	
 
 	for(int lib=1; lib<=numLibs; lib++)
 	{
@@ -1472,9 +1468,7 @@ long int Scaffer::read_mappings(char * inputFilename, char * outputFilename, boo
 		LinkedNode<ContigEdge>::shrink();	
 	}		
 
-	write_scafftmp(outputFilename);
-	
-	cout << "has finished writing the scaffold templates" << endl; 
+	write_scafftmp(outputFilename);		
 
 	delete [] ctags;
 	delete [] tags;
