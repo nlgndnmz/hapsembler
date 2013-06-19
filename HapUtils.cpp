@@ -191,22 +191,35 @@ void calculate_het_cutoff(int * table, int max_overlaps, double err, int max_t, 
 void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
 	int histSize, Library * Libs, int k, bool upperOnly)
 {
-	long long int newMean = 0;
-	long long int newDev = 0;
+	long int newMean = 0;
+	long int newDev = 0;
 	int ceiling = 0;
 	double sdWidth = 0.0;
 
 	for(int d=0; d<histSize; d++)
 		newDev += (histogram[k][d] * (d-libMean[k]) * (d-libMean[k]));
-	newDev = int(sqrt(newDev / (double)libSupport[k]));
-
+	newDev = int(sqrt(newDev / (double)libSupport[k]));			// libSupport has to at least 1, otherwise this routine would not be called
+	
+	if(newDev < 0.01*libMean[k])		// there is practically no deviation, so do not adjust
+	{		
+		cerr << "Adjusting mean insert size from " << Libs[k].insertSize << " to " << libMean[k] << endl;		
+		cerr << "Adjusting insert size deviation from " << Libs[k].deviation << " to max(" << newDev << ",1)" << endl;
+		cerr << "Adjusting maximum standard deviations from " << Libs[k].sdwidth << " to 3.0" << endl;		
+		cerr << "( 0 iterations were performed )" << endl;
+		
+		Libs[k].insertSize = (int) libMean[k];
+		Libs[k].deviation = (newDev > 1) ? (short int)newDev : 1;
+		Libs[k].sdwidth = 3.0;		
+		return;
+	}
+	
 	int total = 0;
 	for(int d=0; d<histSize; d++)
 	{
 		total += histogram[k][d];
 		if(total / (double)libSupport[k] > 0.99)
 		{
-			sdWidth = (d-libMean[k])/(double)newDev;
+			sdWidth = (d-libMean[k])/(double)(newDev);
 			ceiling = d;
 			break;
 		}
@@ -216,16 +229,19 @@ void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
 	while(iter < 100)
 	{
 		int n = libMean[k] - int(sdWidth*newDev);
-		int m = (histSize < libMean[k] + int(sdWidth*newDev)) ? histSize : libMean[k] + int(sdWidth*newDev);
+		int m = libMean[k] + int(sdWidth*newDev);
+		
+		if(n < 1) n = 1;
+		if(m >= histSize) m = histSize - 1;
 
 		newMean = 0;
 		total = 0;
-		for(int d=n; d<m; d++)					// calculate the mean using the bounded area only
+		for(int d=n; d<=m; d++)					// calculate the mean using the bounded area only
 		{										// if data is symmetrical around the mean this should not alter
 			newMean += (d*histogram[k][d]);		// the mean too much
 			total += histogram[k][d];
 		}
-		newMean = newMean/total;
+		newMean = newMean/total;				
 
 		if(newMean - libMean[k] < 0.01*libMean[k] && libMean[k] - newMean < 0.01*libMean[k])
 			break;
@@ -236,8 +252,8 @@ void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
 		for(int d=0; d<histSize; d++)
 			newDev += (histogram[k][d] * (d-libMean[k]) * (d-libMean[k]));
 		newDev = int(sqrt(newDev / (double)libSupport[k]));
-
-		sdWidth = (ceiling - libMean[k])/(double)newDev;
+		
+		sdWidth = (ceiling - libMean[k])/(double)newDev;				
 		iter++;
 	}
 
@@ -253,7 +269,7 @@ void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
 			UB = (d-libMean[k])/(double)newDev;
 			break;
 		}
-	}
+	}	
 
 	total = 0;
 	for(int d=histSize-1; d>0; d--)
@@ -278,6 +294,6 @@ void bootstrap_library(long int * libMean, int * libSupport, int ** histogram,
 
 	Libs[k].insertSize = (int) libMean[k];
 	Libs[k].deviation = (short int) newDev;
-	Libs[k].sdwidth = sdWidth;
+	Libs[k].sdwidth = sdWidth;	
 }
 
