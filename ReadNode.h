@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
-    $Date: 2011-06-13 16:04:02 -0400 (Mon, 13 Jun 2011) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

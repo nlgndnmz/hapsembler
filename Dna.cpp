@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: $
-    $Date: $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -818,7 +816,7 @@ void DNA::write_contigs(char * inputFilename, int minContigSize, char * outputFi
 	int * contig_len = new int[num_reads];
 	int tuple_num = 0;
 	int len = 0;
-	int totalLength = 0;
+	long int totalLength = 0;
 	int dummy;
 
 	int numOfContigs = 0;
@@ -1063,9 +1061,9 @@ void DNA::trim_reads(char * reads_filename, char * reads_filename2, char * outpu
 	if(!useStdout) check_n_close(outFile);
 }
 
-int DNA::read_reads(char * reads_filename, int genome, bool getQuals, bool getDeflines, char * output_filename)
+int DNA::read_reads(char * reads_filename, long int genome, bool getQuals, bool getDeflines, char * output_filename)
 {
-	int num = 0;
+	long int num = 0;
 	long int sum = 0;
 	long int defsum = 0;
 
@@ -1114,12 +1112,13 @@ int DNA::read_reads(char * reads_filename, int genome, bool getQuals, bool getDe
 	max_read_size = max_rs + 5;
 	SW->set_matrix(max_read_size);
 
+	if(num > (2147483600/2)) throw "Number of reads exceeds the limit of one billion. Program is aborting";
 	if(ctr != 0) throw "Number of lines in fastq file is not a multiple of 4. File may be corrupted!";
 	if(sum == 0) throw "Fastq file is empty or corrupted!";
 
 	string s, s2;
 
-	num_reads = num;
+	num_reads = (int)num;
 	double coverage = 0.0;
 
 	if(!isConsensr)
@@ -1253,10 +1252,10 @@ int DNA::read_reads(char * reads_filename, int genome, bool getQuals, bool getDe
 }
 
 
-void DNA::fill_in_kmers(int total_kmers, int max_kmer_duplicity, DnaRead * dnareads, int num)
+void DNA::fill_in_kmers(long int total_kmers, int max_kmer_duplicity, DnaRead * dnareads, int num)
 {
-	int hash_size = 1 << (2*kmer_size);
-	int max_nodes = total_kmers;
+	long int hash_size = 1 << (2*kmer_size);
+	long int max_nodes = total_kmers;
 
 	KH = new KmerHash(hash_size, max_nodes, max_kmer_duplicity);
 
@@ -1456,7 +1455,7 @@ int DNA::overlap_reads(int nthreads, char * filename, bool onestrand, int covera
 	coverage = max(10, coverage);	// do not allow very small coverage values
 	int coverage_cutoff = (coverage*100)/kmer_size;
 
-	int total_kmers = 0;
+	long int total_kmers = 0;
 	for(int i=1; i<=num_reads; i++)
 		total_kmers += (int(reads[i].length / (double)kmer_size) + 2);
 

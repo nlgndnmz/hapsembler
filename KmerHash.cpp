@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: $
-    $Date: $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,7 +26,7 @@
 	#define NULL 0
 #endif
 
-KmerHash::KmerHash(int size, int num_expected_nodes, int max_kmer_duplicity)
+KmerHash::KmerHash(long int size, long int num_expected_nodes, int max_kmer_duplicity)
 {
 	hash_size = size;
 	kmer_list = new KmerList[hash_size];

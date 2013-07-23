@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
-    $Date: 2012-10-05 17:38:02 -0400 (Fri, 05 Oct 2012) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -171,7 +169,7 @@ int main(int argc, char **argv)
 	int max_steps = 1000;
 	double prior = 0.999;
 
-	int genome = 0;
+	long int genome = 0;
 	Sequencer platform = NOPLATFORM;
 
 	char * fastqFilename = NULL;
@@ -198,7 +196,7 @@ int main(int argc, char **argv)
 			contigsFilename = argv[i+1];
 
 		else if(strcmp(argv[i], "--genome") == 0 || strcmp(argv[i], "-g") == 0)
-			sscanf( argv[i+1], "%d", &genome);
+			sscanf( argv[i+1], "%ld", &genome);
 
 		else if(strcmp(argv[i], "--revcomp") == 0 || strcmp(argv[i], "-n") == 0)
 			sscanf( argv[i+1], "%d", &revcomp);
@@ -268,7 +266,7 @@ int main(int argc, char **argv)
 	if(revcomp < 0 || revcomp > 3) revcomp = 0;
 	if(genome > 3200000) usage(argv[0], " ", "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs.");
 
-	if(UINT_MAX <= 2147483647)
+	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
 		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");
 
 	time_t rawtime;

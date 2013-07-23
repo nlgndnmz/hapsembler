@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
-    $Date: 2012-08-29 21:24:20 -0400 (Wed, 29 Aug 2012) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,7 +45,7 @@ class DNA
 
 		void trim_reads(char *, char *, char *, int, double, int);
 
-		int read_reads(char *, int, bool = false, bool = false, char * = NULL);
+		int read_reads(char *, long int, bool = false, bool = false, char * = NULL);
 		int overlap_reads(int, char *, bool, int);
 		void prune_overlaps(char *, int);
 		void cat_reads(char *, int);
@@ -74,7 +72,7 @@ class DNA
 		void correct_read(std::ofstream &, char *, int, ReadAln *, int, double *);
 		int get_overlaps(int, int, ReadAln *, SmithWaterman *);
 
-		void fill_in_kmers(int, int, DnaRead *, int);
+		void fill_in_kmers(long int, int, DnaRead *, int);
 		void count_qmers(DnaRead *, int, int);
 		bool compare_reads(DnaRead &, bool, ReadMatch *, RMatch *, DnaRead *, SmithWaterman *);
 		bool align_reads(DnaRead &, DnaRead &, bool, bool, double, ReadMatch *, SmithWaterman *);

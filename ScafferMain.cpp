@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
-    $Date: 2011-12-02 13:24:00 -0500 (Fri, 02 Dec 2011) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011-2012,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -117,8 +115,8 @@ int main(int argc, char **argv)
 			usage(argv[0], argv[i], "unknown option. Please check your command.");
 	}
 
-	if(UINT_MAX <= 2147483647)
-		usage(argv[0], " ", "Integral types are too small. Please re-compile using a more recent compiler!");
+	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
+		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");
 
 	if(ULONG_MAX <= UINT_MAX)
 	{

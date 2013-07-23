@@ -1,5 +1,4 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez$
 
 	Part of Hapsembler package. See the README file for more information.
     Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>

@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
-    $Date: 2012-10-07 18:54:28 -0400 (Sun, 07 Oct 2012) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -80,11 +78,17 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 	int read_id = 1;
 	int read_len = 0;
 	int max_read_size = 0;
-	int num_reads = 0;
+	long int num = 0;
+	
+	int max_insert_allowed = 16000;
 
-	if( !(readFile >> num_reads) )
+	if( !(readFile >> num) )
 		throw "Can not read the reads file!";
 
+	if(num > (2147483600/2))
+		throw "Number of reads exceed the maximum limit of one billion. Aborting";
+		
+	int num_reads = (int)num;
 	OG = new OvlGraph(num_reads, onestrand);
 
 	while( readFile >> read_len )
@@ -108,8 +112,11 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 		open_n_check(infoFile, infoFilename);
 		while( infoFile >> start >> end >> insert_size >> deviation >> ori )
 		{
-			if(insert_size < 16000)	// we can not process anything larger
+			if(insert_size < max_insert_allowed)	// we can not process anything larger
 				num_libs++;
+			else
+				cerr << "Warning: Hapsembler can not process insert sizes greater than " << max_insert_allowed << "bp." << endl;
+				
 			if( (end - start + 1)%2 == 1 )
 				throw "Library contains odd number of reads!";
 			num_pairs += (end - start + 1)/2;
@@ -124,7 +131,7 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 		while( infoFile2 >> start >> end >> insert_size >> deviation >> ori )
 		{
 			int L = 0;
-			if(insert_size < 16000)
+			if(insert_size < max_insert_allowed)
 			{
 				OG->Libs[++num_libs].insertSize = insert_size;
 				OG->Libs[num_libs].deviation = (short int) deviation;
@@ -192,7 +199,7 @@ int main(int argc, char **argv)
 
 	bool onestrand = false;
 	bool calibrate = true;
-	int genome = 0;
+	long int genome = 0;
 
 	char * prefix = NULL;
 	char * infoFilename = NULL;
@@ -210,7 +217,7 @@ int main(int argc, char **argv)
 			contigFilename = argv[i+1];
 
 		else if(strcmp(argv[i], "--genome") == 0 || strcmp(argv[i], "-g") == 0)
-			sscanf(argv[i+1], "%d", &genome);
+			sscanf(argv[i+1], "%ld", &genome);
 
 		else if(strcmp(argv[i], "--calibrate") == 0 || strcmp(argv[i], "-b") == 0)
 		{
@@ -229,7 +236,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if(UINT_MAX <= 2147483647)
+	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
 	{
 		cerr << "Integer types are too small! Please re-compile Hapsembler using a more recent compiler!" << endl;
 		exit(0);
@@ -258,6 +265,7 @@ int main(int argc, char **argv)
 	if(prefix == NULL) { cerr << "Prefix for input files is not given!" << endl; usage(argv[0]); }
 	if(contigFilename == NULL) { cerr << "Output filename is not given!" << endl; usage(argv[0]); }
 	if(genome < 1) { cerr << "Genome size is too small or not given!" << endl; usage(argv[0]); }
+	if(genome > 3200000) { cerr << "Genome size is greater than 3.2 billion. Please set genome size in KILO base pairs." << endl; usage(argv[0]); }
 
 	genome *= 1000;		// convert it to base pairs
 

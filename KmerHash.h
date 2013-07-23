@@ -1,9 +1,7 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
-    $Date: 2011-05-05 18:58:27 -0400 (Thu, 05 May 2011) $
 
 	Part of Hapsembler package. See the README file for more information.
-    Copyright (C) 2011,  Nilgun Donmez <nild@cs.toronto.edu>
+    Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +27,7 @@ class KmerList;
 class KmerHash
 {
 	public:
-		KmerHash(int, int, int);
+		KmerHash(long int, long int, int);
 		~KmerHash();
 
 		KmerList * kmer_list;
@@ -41,9 +39,9 @@ class KmerHash
 
 	private:
 		KmerNode * nodes;
-		int hash_size;
-		int num_nodes;
-		int node_counter;
+		long int hash_size;
+		long int num_nodes;
+		long int node_counter;
 
 };
 

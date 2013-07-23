@@ -1,5 +1,4 @@
 /*****************************************************************************
-    $Author: Nilgun Donmez $
 
 	Part of Hapsembler package. See the README file for more information.
     Copyright (C) 2011-2013,  Nilgun Donmez <nild@cs.toronto.edu>
@@ -22,8 +21,8 @@
 #ifndef HAP_SUITE_H
 #define HAP_SUITE_H
 
-#define HAPVERSION 2.12
-#define SCARPAVERSION 0.23
-#define ENCOREVERSION 1.21
+#define HAPVERSION 2.2
+#define SCARPAVERSION 0.3
+#define ENCOREVERSION 1.3
 
 #endif
