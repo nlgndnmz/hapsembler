@@ -1144,8 +1144,9 @@ int DNA::read_reads(char * reads_filename, long int genome, bool getQuals, bool 
 		{
 			SW->min_overlap = int(minOvl);
 		}
+		cerr << "Number of sequences read : " << num_reads << endl;
 		cerr << "Setting the minimum overlap to : " << SW->min_overlap << endl;
-		cerr << "Setting the kmer size to : " << this->kmer_size << endl;
+		cerr << "Setting the kmer size to : " << this->kmer_size << endl;		
 	}
 
 	sequences = (getQuals) ? new char[2*(sum+num_reads+1)] : new char[sum+num_reads+1];
