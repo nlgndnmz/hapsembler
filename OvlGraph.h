@@ -65,9 +65,6 @@ class OvlGraph
 		void read_chain_collapse();
 		void mate_chain_collapse();
 
-		int plot_readovl_distribution(char *, int);
-		int plot_mateovl_distribution(char *, int);
-
 		int check_read_graph();
 		int check_mate_graph();
 
@@ -81,7 +78,7 @@ class OvlGraph
 		void simplify_mate_chains(int);
 
 		// simplifiers
-		int venom();
+		long int venom();
 		void bridge_matepairs();
 
 		// settlers

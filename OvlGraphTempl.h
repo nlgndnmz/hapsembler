@@ -284,7 +284,7 @@ int check_graph(Vertex * nd_ptr, int num)
 	int max_degree = 0;
 	int degree;
 	int num_nodes = 0;
-	int num_arcs = 0;
+	long int num_arcs = 0;
 	int others = 0;
 
 	for(int x=1; x<=num; x++)
@@ -318,71 +318,6 @@ int check_graph(Vertex * nd_ptr, int num)
 	cout << "# max degree: " << max_degree << endl << endl;
 
 	return num_nodes;	// number of active nodes
-}
-
-// can be used for all types inherited from BiNode
-template <class Vertex>
-int plot_distribution(char * filename, int num_of_blocks, int type, Vertex * nd_ptr, int num)
-{
-	ofstream fh;
-	open_n_check(fh, filename);
-
-	int A;
-	int blocks[num_of_blocks+1];
-
-	for(int i=0; i<=num_of_blocks; i++) {	blocks[i]=0; }
-
-	for(A=1; A<=num; A++)
-	{
-		int deg = 0;
-
-		switch(type)
-		{
-		case INDEG:
-			deg = nd_ptr[A].get_in_degree();
-			break;
-		case OUTDEG:
-			deg = nd_ptr[A].get_out_degree();
-			break;
-		case DEG:
-			deg = nd_ptr[A].get_degree();
-			break;
-		default:
-			throw "OvlGraph: Invalid type";
-			break;
-		}
-
-		if(deg < num_of_blocks)
-			blocks[deg]++;	// new kid on the block
-		else
-			blocks[num_of_blocks]++;
-
-	}
-
-	double x = 10.0;
-	double y = 10.0;
-
-	int coverage = 0;
-	int highest = 0;
-
-	fh << "graph [ " << "\n";
-	for(int i=0; i<=num_of_blocks; i++)
-	{
-		if(blocks[i] > highest)
-		{
-			coverage = i;
-			highest = blocks[i];
-		}
-
-		int width = ((blocks[i] * 1000) / num) + 2;
-		fh << "node [ id " << i << " label " << i << "\n";
-		fh << "LabelGraphics [ anchor \"w\" ] " << "\n";
-		fh << "graphics [ x " << x - int(width/2) << " y " << y << " h 15.0 w " << width << "\n";
-		fh << "fill \"#ffcc99\" line \"#000000\" type \"rectangle\" linewidth 1.0 ] ]" << "\n";
-		y += 30;
-	}
-	check_n_close(fh);
-	return coverage;
 }
 
 template <class Vertex, class Arc>
@@ -525,7 +460,7 @@ int matesort(PathNode * nd_ptr, int x, int component, int * que, int * S, int * 
 				int i = iter.get_flg();
 				int y = pe->toRead[i];
 
-				bool  before = nd_ptr[y].forward;
+				bool before = nd_ptr[y].forward;
 
 				if( (pe->arrow[0] & OUTIE) == (pe->arrow[1] & OUTIE) )		// they face the same direction
 					nd_ptr[y].forward = !nd_ptr[x].forward;

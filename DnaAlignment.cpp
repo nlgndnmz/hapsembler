@@ -37,7 +37,7 @@ void usage(const char * progName, const char * badArg, const char * msg)
 #else
 	cerr << "Please see the README file for more information. Version " << ENCOREVERSION << "(hsv:" << HAPVERSION << ") (OpenMP support: no) " << endl << endl;
 #endif
-	
+
 #ifdef PREPROCR
 	cerr << "    " << progName << " -p <platform> -f <file> -o <file> " << endl << "\n\
 OPTIONS \n\
@@ -266,8 +266,8 @@ int main(int argc, char **argv)
 	if(revcomp < 0 || revcomp > 3) revcomp = 0;
 	if(genome > 3200000) usage(argv[0], " ", "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs.");
 
-	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
-		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");
+	if(INT_MAX < (2000*1024*1024) || LONG_MAX < (64*1024*1024*1024))
+		usage(argv[0], " ", "Integral types are too small! Please re-compile using a more recent compiler.");
 
 	time_t rawtime;
 	struct tm * timeinfo;
@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 
 	clock_t start, stop;
 	start = clock();
-	
+
 #ifndef USEOPENMP
 	if(nthreads > 1)
 		cerr << "You have requested multiple threads but the program is compiled without OpenMP support. Please recompile to enable multi-threading." << endl << endl;

@@ -27,7 +27,7 @@ class KmerList;
 class KmerHash
 {
 	public:
-		KmerHash(long int, long int, int);
+		KmerHash(int, long int, int);
 		~KmerHash();
 
 		KmerList * kmer_list;
@@ -39,7 +39,7 @@ class KmerHash
 
 	private:
 		KmerNode * nodes;
-		long int hash_size;
+		int hash_size;
 		long int num_nodes;
 		long int node_counter;
 

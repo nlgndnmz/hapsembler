@@ -134,16 +134,6 @@ void OvlGraph::mate_chain_collapse()
 	chain_collapse<MatePair, MateEdge>(Pairs, Mates, numPairs);
 }
 
-int OvlGraph::plot_readovl_distribution(char * fn, int t)
-{
-	return plot_distribution<ReadNode>(fn, 1000, t, Nodes, numNodes);
-}
-
-int OvlGraph::plot_mateovl_distribution(char * fn, int t)
-{
-	return plot_distribution<MatePair>(fn, 1000, t, Pairs, numPairs);
-}
-
 int OvlGraph::check_read_graph()
 {
 	return check_graph<ReadNode>(Nodes, numNodes);
@@ -392,7 +382,7 @@ void OvlGraph::add_arc(int first_read, int second_read, int first_start, int sec
     }
 }
 
-int OvlGraph::venom()
+long int OvlGraph::venom()
 {
 	int * neighbourCount = new int[numNodes+1];
 	int * neighbourCache = new int[numNodes+1];
@@ -460,7 +450,7 @@ int OvlGraph::venom()
 	delete [] neighbourCount;
 	delete [] neighbourCache;
 
-	int counter = 0;
+	long int counter = 0;
 	// Nothing is actually removed till now. Next we will remove everything marked to be removed
 	for(int A=1; A<=numNodes; A++)
 		counter += Nodes[A].remove_marked(REMOVABLE);
@@ -667,14 +657,14 @@ void OvlGraph::calibrate_libraries(char * filename)
 		libMean[k] = int(libMean[k]/(double)libSupport[k]);
 		bootstrap_library(libMean, libSupport, histogram, histSize, Libs, k, true);
 	}
-	
-	string s(filename);		
+
+	string s(filename);
 	s += ".hist";
 	char * fname = new char[s.size()+1];
 	strcpy(fname, s.c_str());
 	ofstream fh;
 	open_n_check(fh, fname);
-	
+
 	for(int d=0; d<histSize; d++)
 	{
 		for(int k=1; k<=numLibs; k++)

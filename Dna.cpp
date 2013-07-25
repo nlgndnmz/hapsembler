@@ -1146,7 +1146,7 @@ int DNA::read_reads(char * reads_filename, long int genome, bool getQuals, bool 
 		}
 		cerr << "Number of sequences read : " << num_reads << endl;
 		cerr << "Setting the minimum overlap to : " << SW->min_overlap << endl;
-		cerr << "Setting the kmer size to : " << this->kmer_size << endl;		
+		cerr << "Setting the kmer size to : " << this->kmer_size << endl;
 	}
 
 	sequences = (getQuals) ? new char[2*(sum+num_reads+1)] : new char[sum+num_reads+1];
@@ -1255,7 +1255,7 @@ int DNA::read_reads(char * reads_filename, long int genome, bool getQuals, bool 
 
 void DNA::fill_in_kmers(long int total_kmers, int max_kmer_duplicity, DnaRead * dnareads, int num)
 {
-	long int hash_size = 1 << (2*kmer_size);
+	int hash_size = 1 << (2*kmer_size);
 	long int max_nodes = total_kmers;
 
 	KH = new KmerHash(hash_size, max_nodes, max_kmer_duplicity);

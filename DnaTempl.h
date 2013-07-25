@@ -359,9 +359,9 @@ void path_sync(Vertex * nd_ptr, int num, PathNode * paths)
 
 // generic method to remove all edges from the graph matching the EdgeFlag a_flag
 template <class Vertex>
-int prune_graph(Vertex * nd_ptr, int num, EdgeFlag a_flag)
+long int prune_graph(Vertex * nd_ptr, int num, EdgeFlag a_flag)
 {
-	int total = 0;
+	long int total = 0;
 	for(int A=1; A<=num; A++)
 		total += nd_ptr[A].remove_marked(a_flag);		// remove all edges that are marked with a_flag
 	return total;

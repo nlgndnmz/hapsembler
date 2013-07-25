@@ -79,15 +79,15 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 	int read_len = 0;
 	int max_read_size = 0;
 	long int num = 0;
-	
+
 	int max_insert_allowed = 16000;
 
 	if( !(readFile >> num) )
 		throw "Can not read the reads file!";
 
-	if(num > (2147483600/2))
+	if(num > (1000*1024*1024))
 		throw "Number of reads exceed the maximum limit of one billion. Aborting";
-		
+
 	int num_reads = (int)num;
 	OG = new OvlGraph(num_reads, onestrand);
 
@@ -116,7 +116,7 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 				num_libs++;
 			else
 				cerr << "Warning: Hapsembler can not process insert sizes greater than " << max_insert_allowed << "bp." << endl;
-				
+
 			if( (end - start + 1)%2 == 1 )
 				throw "Library contains odd number of reads!";
 			num_pairs += (end - start + 1)/2;
@@ -236,9 +236,9 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
+	if(INT_MAX < (2000*1024*1024) || LONG_MAX < (64*1024*1024*1024))
 	{
-		cerr << "Integer types are too small! Please re-compile Hapsembler using a more recent compiler!" << endl;
+		cerr << "Integral types are too small! Please re-compile using a more recent compiler." << endl;
 		exit(0);
 	}
 
@@ -265,7 +265,7 @@ int main(int argc, char **argv)
 	if(prefix == NULL) { cerr << "Prefix for input files is not given!" << endl; usage(argv[0]); }
 	if(contigFilename == NULL) { cerr << "Output filename is not given!" << endl; usage(argv[0]); }
 	if(genome < 1) { cerr << "Genome size is too small or not given!" << endl; usage(argv[0]); }
-	if(genome > 3200000) { cerr << "Genome size is greater than 3.2 billion. Please set genome size in KILO base pairs." << endl; usage(argv[0]); }
+	if(genome > 3200000) { cerr << "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs." << endl; usage(argv[0]); }
 
 	genome *= 1000;		// convert it to base pairs
 

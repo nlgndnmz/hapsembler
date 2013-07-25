@@ -34,7 +34,7 @@ void usage(const char * progName, const char * badArg, const char * msg)
 {
 	cerr << endl << badArg << " " << msg << endl;
 	cerr << "Please see the README file for more information. Version " << SCARPAVERSION << "(hsv:" << HAPVERSION << ")" << endl << endl;
-	
+
 	cerr << "    " << progName << " -c <file> -l <file> -i <file> -o <file> \n\n\
 OPTIONS \n\
     --contigs|-c contigs_filename \n\
@@ -115,8 +115,8 @@ int main(int argc, char **argv)
 			usage(argv[0], argv[i], "unknown option. Please check your command.");
 	}
 
-	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
-		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");
+	if(INT_MAX < (2000*1024*1024) || LONG_MAX < (64*1024*1024*1024))
+		usage(argv[0], " ", "Integral types are too small! Please re-compile using a more recent compiler.");
 
 	time_t rawtime;
 	struct tm * timeinfo;

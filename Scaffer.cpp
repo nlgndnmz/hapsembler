@@ -63,22 +63,29 @@ Scaffer::~Scaffer()
 
 void Scaffer::read_info(char * filename, int minSupport)
 {
-	int st, end, insert, dev, ori;
+	int insert, dev, ori;
+	long int end;
+	long int st;
 
 	numLibs = 0;
 	numPairs = 0;
+
+	long int num = 0;
 
 	ifstream fh;
 	open_n_check(fh, filename);
 	while(fh >> st >> end >> insert >> dev >> ori)
 	{
 		numLibs++;
-		if(end>numPairs)
-			numPairs = end;
+		if(end>num)
+			num = end;
 	}
 	check_n_close(fh);
 
-	numPairs /= 2;
+	if(num > (2000*1024*1024))
+		throw "Number of reads exceed the maximum limit of two billion. Aborting...";
+
+	numPairs = int(num/2);
 
 	Pairs = new ReadPair[2*numPairs+1];
 	Libs = new Library[numLibs+1];
@@ -97,7 +104,7 @@ void Scaffer::read_info(char * filename, int minSupport)
 		Libs[counter].coverage = 0.0;
 		Libs[counter].minSupport = minSupport;
 
-		for(int i=st; i<=end; i++)
+		for(long int i=st; i<=end; i++)
 		{
 			Pairs[i].lib = counter;
 			Pairs[i].length = 1;
@@ -634,7 +641,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 		histogram[k] = new int[histSize+1];
 		for(int d=0; d<=histSize; d++)
 			histogram[k][d] = 0;
-	}		
+	}
 
 	for(int k=1; k<=numPairs; k++)
 	{
@@ -646,7 +653,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			j = i-1;
 		}
 
-		int t = Pairs[i].lib;			
+		int t = Pairs[i].lib;
 
 		if(tags[j].contigID >= 0 && tags[i].contigID >= 0)
 			Libs[t].coverage += 1;
@@ -656,7 +663,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			int distance = tags[j].offset - tags[i].offset;
 			if(tags[i].strand != tags[j].strand && distance > 0)	// otherwise the orientation and/or mapping must be wrong
 			{
-				distance += Pairs[j].length;				
+				distance += Pairs[j].length;
 				if(distance < histSize)
 				{
 					histogram[t][distance] += 1;
@@ -672,8 +679,8 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			}
 			else
 				failure[t]++;
-		}			
-	}		
+		}
+	}
 
 	for(int k=1; k<=numLibs; k++)
 	{
@@ -688,7 +695,7 @@ void Scaffer::adjust_libraries(ReadTag * tags, bool calibrate, long int totalBas
 			cout << "WARNING: support is too low, library statistics will not be altered!" << endl;
 			continue;
 		}
-			
+
 		double ratio = success[k] / (double) (success[k] + failure[k]);
 		Libs[k].minSupport = max(Libs[k].minSupport, int(log(epsilon) / log(1-ratio)));
 
@@ -1403,7 +1410,7 @@ long int Scaffer::read_mappings(char * inputFilename, char * outputFilename, boo
 		contigLens[k-1] = ctags[k].length;
 		totalBases += ctags[k].length;
 	}
-	
+
 	int N50 = length_stats(contigLens, numContigs, totalBases, 0.5);
 	adjust_libraries(tags, calibrate, totalBases, N50, ctags, 0.001);		// re-calculate the library mean and variance
 
@@ -1415,7 +1422,7 @@ long int Scaffer::read_mappings(char * inputFilename, char * outputFilename, boo
 		contigs[k].len = ctags[k].length;
 		contigs[k].containedLen = ctags[k].length;
 		contigs[k].coverage = (ctags[k].count / (double)ctags[k].length);
-	}	
+	}
 
 	for(int lib=1; lib<=numLibs; lib++)
 	{
@@ -1462,12 +1469,12 @@ long int Scaffer::read_mappings(char * inputFilename, char * outputFilename, boo
 		chain_collapse();
 		for(int k=1; k<=numContigs; k++)
 			contigs[k].remove_all();
-		
-		ContigEdge::shrink();
-		LinkedNode<ContigEdge>::shrink();	
-	}		
 
-	write_scafftmp(outputFilename);		
+		ContigEdge::shrink();
+		LinkedNode<ContigEdge>::shrink();
+	}
+
+	write_scafftmp(outputFilename);
 
 	delete [] ctags;
 	delete [] tags;
@@ -1494,10 +1501,10 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, long 
 
 	ifstream scaffoldFile;
 	open_n_check(scaffoldFile, ifname);
-	
+
 	DnaRead * contigSeq = new DnaRead[numContigs+1];
 	char * sequences = new char[totalLength+numContigs+1];
-	
+
 	bool * written = new bool[numContigs+1];
 	for(int i=0; i<=numContigs; i++)
 		written[i] = false;
@@ -1556,7 +1563,7 @@ int Scaffer::write_scaffolds(char * contigFilename, char * outputFilename, long 
 
 	contigSeq[currentContig].length = sequenceCounter;	// finalize the last contig
 	check_n_close(fastaFile);
-	
+
 	int scaffoldNum = 0;
 	int bytes = 0;
 	int textwidth = 80;

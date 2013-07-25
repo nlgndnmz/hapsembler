@@ -26,7 +26,7 @@
 	#define NULL 0
 #endif
 
-KmerHash::KmerHash(long int size, long int num_expected_nodes, int max_kmer_duplicity)
+KmerHash::KmerHash(int size, long int num_expected_nodes, int max_kmer_duplicity)
 {
 	hash_size = size;
 	kmer_list = new KmerList[hash_size];

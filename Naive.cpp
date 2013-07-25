@@ -156,7 +156,6 @@ void Naive::set_prior(double prior_of_B)
 
 Naive::~Naive()
 {
-
 	delete [] p_correct;
 	delete [] p_error;
 	delete [] log_correct;
