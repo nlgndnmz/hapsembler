@@ -118,12 +118,6 @@ int main(int argc, char **argv)
 	if(INT_MAX < 2147483600 || LONG_MAX < (64*4294967295))
 		usage(argv[0], " ", "Integral types are too small. Please re-compile Hapsembler using a more recent compiler!");
 
-	if(ULONG_MAX <= UINT_MAX)
-	{
-		cout << "WARNING: Integral types are smaller than expected. Turning off calibration to avoid overflow." << endl;
-		calibrate = false;
-	}
-
 	time_t rawtime;
 	struct tm * timeinfo;
 
