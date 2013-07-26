@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 	if(revcomp < 0 || revcomp > 3) revcomp = 0;
 	if(genome > 3200000) usage(argv[0], " ", "Genome size exceeds 3,200,000kbp. Please set the genome size in KILO base pairs.");
 
-	if(INT_MAX < (2000*1024*1024) || LONG_MAX < (64*1024*1024*1024))
+	if(INT_MAX < 2097152000 || (LONG_MAX-10) < INT_MAX )	
 		usage(argv[0], " ", "Integral types are too small! Please re-compile using a more recent compiler.");
 
 	time_t rawtime;

@@ -1112,7 +1112,7 @@ int DNA::read_reads(char * reads_filename, long int genome, bool getQuals, bool 
 	max_read_size = max_rs + 5;
 	SW->set_matrix(max_read_size);
 
-	if(num > (2147483600/2)) throw "Number of reads exceeds the limit of one billion. Program is aborting";
+	if(num > 1048576000) throw "Number of reads exceeds the limit of one billion. Program is aborting";
 	if(ctr != 0) throw "Number of lines in fastq file is not a multiple of 4. File may be corrupted!";
 	if(sum == 0) throw "Fastq file is empty or corrupted!";
 

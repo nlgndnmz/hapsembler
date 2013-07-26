@@ -82,7 +82,7 @@ void Scaffer::read_info(char * filename, int minSupport)
 	}
 	check_n_close(fh);
 
-	if(num > (2000*1024*1024))
+	if(num > 2097152000)
 		throw "Number of reads exceed the maximum limit of two billion. Aborting...";
 
 	numPairs = int(num/2);

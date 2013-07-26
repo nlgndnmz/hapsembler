@@ -85,7 +85,7 @@ int get_reads(OvlGraph *& OG, char * prefix, char * infoFilename, bool onestrand
 	if( !(readFile >> num) )
 		throw "Can not read the reads file!";
 
-	if(num > (1000*1024*1024))
+	if(num > 1048576000)	// 1000mb
 		throw "Number of reads exceed the maximum limit of one billion. Aborting";
 
 	int num_reads = (int)num;
@@ -236,7 +236,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if(INT_MAX < (2000*1024*1024) || LONG_MAX < (64*1024*1024*1024))
+	if(INT_MAX < 2097152000 || (LONG_MAX-10) < INT_MAX )
 	{
 		cerr << "Integral types are too small! Please re-compile using a more recent compiler." << endl;
 		exit(0);

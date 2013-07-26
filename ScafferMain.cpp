@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 			usage(argv[0], argv[i], "unknown option. Please check your command.");
 	}
 
-	if(INT_MAX < (2000*1024*1024) || LONG_MAX < (64*1024*1024*1024))
+	if(INT_MAX < 2097152000 || (LONG_MAX-10) < INT_MAX )	
 		usage(argv[0], " ", "Integral types are too small! Please re-compile using a more recent compiler.");
 
 	time_t rawtime;
