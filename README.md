@@ -2,9 +2,7 @@
 ###### author: Nilgun Donmez
 
 This is the developmental copy of the Hapsembler genome assembly toolkit. 
-To access the latest stable version please visit:
-
-http://compbio.cs.toronto.edu/hapsembler/index.html
+If you simply want to install the latest release, please check the releases.
 
 The algorithms and results achieved on simulated and real datasets are 
 described in detail in the following papers:
